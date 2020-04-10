@@ -14,7 +14,7 @@ import java.util.*;
 
 public class FileManager {
 
-    private ArrayList directories;
+    private ArrayList<File> directories;
     private boolean acceptInnerClasses;
 
 
@@ -74,12 +74,11 @@ public class FileManager {
         return isJar(file) || isZip(file) || isWar(file);
     }
 
-    public Collection extractFiles() {
+    public Collection<File> extractFiles() {
 
         Collection files = new TreeSet();
 
-        for (Iterator i = directories.iterator(); i.hasNext();) {
-            File directory = (File)i.next();
+        for (File directory : directories ) {
             collectFiles(directory, files);
         }
 

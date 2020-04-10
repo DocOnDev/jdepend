@@ -33,7 +33,7 @@ public class JDependTestCase extends TestCase {
 //        homeDir = homeDir + File.separator;
         // Let's not worry about a property for now.
         homeDir = "./";
-        testDir = homeDir + File.separator + "test" + File.separator;
+        testDir = homeDir + "test" + File.separator;
         testDataDir = testDir + "data" + File.separator;
         buildDir = homeDir + "build" + File.separator;
         packageSubDir = "jdepend" + File.separator + 
