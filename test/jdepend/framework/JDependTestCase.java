@@ -65,6 +65,7 @@ public class JDependTestCase extends TestCase {
         return packageSubDir;
     }
 
+    // Added to resolve a junit error
     @Ignore
     public void testFake() {
         assertTrue(true);
