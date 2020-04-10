@@ -31,11 +31,15 @@ public class ExampleTest extends TestCase {
 
     protected void setUp() throws IOException {
 
+/*
         jdependHomeDirectory = System.getProperty("jdepend.home");
         if (jdependHomeDirectory == null) {
             fail("Property 'jdepend.home' not defined");
         }
+*/
 
+        // Do bother with system property for now
+        jdependHomeDirectory = "./";
         PackageFilter filter = new PackageFilter();
         filter.addPackage("java.*");
         filter.addPackage("javax.*");
@@ -124,11 +128,11 @@ public class ExampleTest extends TestCase {
         JavaPackage text = constraint.addPackage("jdepend.textui");
         JavaPackage xml = constraint.addPackage("jdepend.xmlui");
         JavaPackage swing = constraint.addPackage("jdepend.swingui");
-        JavaPackage orgjunitrunners = constraint.addPackage("orgjunitrunners");
-        JavaPackage jdependframeworkp2 = constraint.addPackage("jdependframeworkp2");
-        JavaPackage jdependframeworkp3 = constraint.addPackage("jdependframeworkp3");
-        JavaPackage jdependframeworkp1 = constraint.addPackage("jdependframeworkp1");
-        JavaPackage orgjunit = constraint.addPackage("orgjunit");
+        JavaPackage orgjunitrunners = constraint.addPackage("org.junit.runners");
+        JavaPackage jdependframeworkp2 = constraint.addPackage("jdepend.framework.p2");
+        JavaPackage jdependframeworkp3 = constraint.addPackage("jdepend.framework.p3");
+        JavaPackage jdependframeworkp1 = constraint.addPackage("jdepend.framework.p1");
+        JavaPackage orgjunit = constraint.addPackage("org.junit");
 
         framework.dependsUpon(junitframework);
         framework.dependsUpon(junitui);
@@ -144,8 +148,9 @@ public class ExampleTest extends TestCase {
 
         jdepend.analyze();
 
-        assertEquals("Constraint mismatch", 
-                     true, jdepend.dependencyMatch(constraint));
+        boolean isMatching = jdepend.dependencyMatch(constraint);
+        assertEquals("Constraint mismatch",
+                     true, isMatching);
     }
 
     public static void main(String[] args) {

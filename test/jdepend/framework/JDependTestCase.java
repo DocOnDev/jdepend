@@ -3,6 +3,7 @@ package jdepend.framework;
 import java.io.*;
 
 import junit.framework.*;
+import org.junit.Ignore;
 
 /**
  * @author <b>Mike Clark</b>
@@ -62,5 +63,10 @@ public class JDependTestCase extends TestCase {
     
     public String getPackageSubDir() {
         return packageSubDir;
+    }
+
+    @Ignore
+    public void testFake() {
+        assertTrue(true);
     }
 }
