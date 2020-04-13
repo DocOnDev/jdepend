@@ -33,30 +33,19 @@ public class FileManager {
         acceptInnerClasses = b;
     }
 
-    public void addDirectory(String name) throws IOException {
+    public void addDirectory(String fileName) throws IOException {
 
-        File directory = new File(name);
+        File directory = new File(fileName);
 
         if (isDirectoryOrContainer(directory)) {
             directories.add(directory);
         } else {
-            throw new IOException("Invalid directory or Container file: " + name);
+            throw new IOException("Invalid directory or Container file: " + fileName);
         }
-    }
-
-    private boolean isDirectoryOrContainer(File directory) {
-        return directory.isDirectory() || isValidContainer(directory);
-    }
-
-    public boolean acceptFile(File file) {
-        return acceptClassFile(file) || isValidContainer(file);
     }
 
     public boolean acceptClassFile(File file) {
-        if (!file.isFile()) {
-            return false;
-        }
-        return acceptClassFileName(file.getName());
+        return file.isFile() && acceptClassFileName(file.getName());
     }
 
     public boolean acceptClassFileName(String name) {
@@ -89,6 +78,10 @@ public class FileManager {
         return files;
     }
 
+    private boolean acceptFile(File file) {
+        return acceptClassFile(file) || isValidContainer(file);
+    }
+
     private void collectFiles(File directory, Collection files) {
 
         if (directory.isFile()) {
@@ -111,6 +104,10 @@ public class FileManager {
         }
     }
 
+    private boolean isDirectoryOrContainer(File directory) {
+        return directory.isDirectory() || isValidContainer(directory);
+    }
+
     private void addFile(File f, Collection files) {
         if (!files.contains(f)) {
             files.add(f);
@@ -125,9 +122,7 @@ public class FileManager {
         return existsWithExtension(file, ".zip");
     }
  
-    private boolean isJar(File file) {
-        return existsWithExtension(file, ".jar");
-    }
+    private boolean isJar(File file) { return existsWithExtension(file, ".jar"); }
 
     private boolean existsWithExtension(File file, String extension) {
         return file.isFile() &&
