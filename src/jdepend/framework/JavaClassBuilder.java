@@ -87,7 +87,7 @@ public class JavaClassBuilder {
                     is.close();
                 }
             }
-        } else if (fileManager.acceptJarFile(file)) {
+        } else if (fileManager.isValidContainer(file)) {
 
             JarFile jarFile = new JarFile(file);
             Collection result = buildClasses(jarFile);

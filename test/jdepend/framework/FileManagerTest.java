@@ -37,28 +37,37 @@ public class FileManagerTest extends JDependTestCase {
 
     public void testNonExistentDirectory() {
 
-        try {
-            
-            fileManager.addDirectory(getBuildDir() + "junk");
-            fail("Non-existent directory: Should raise IOException");
-        
-        } catch (IOException expected) {
-            assertTrue(true);
-        }
+        String file = getBuildDir() + "junk";
+        String errorReason = "Non-existent directory:";
+        assertIOError(file, errorReason);
     }
 
     public void testInvalidDirectory() {
 
         String file = getTestDir() + getPackageSubDir() + "ExampleTest.java";
-        
+        String errorReason = "Invalid directory:";
+        assertIOError(file, errorReason);
+    }
+
+    private void assertIOError(String fileName, String errorReason) {
         try {
-            
-            fileManager.addDirectory(file);
-            fail("Invalid directory: Should raise IOException");
-            
+            fileManager.addDirectory(fileName);
+            fail(errorReason + " " + "Should raise IOException");
         } catch (IOException expected) {
-            assertTrue(true);
+            assertEquals("Invalid directory or Container file: " + fileName, expected.getMessage());
         }
+    }
+
+    public void testIsValidContainerAcceptsJarFile() {
+        assertTrue(fileManager.isValidContainer(new File(getTestDataDir()+ "test.jar")));
+    }
+
+    public void testIsValidContainerAcceptsZipFile() {
+        assertTrue(fileManager.isValidContainer(new File(getTestDataDir() + "test.zip")));
+    }
+
+    public void testIsValidContainerDoesNotAcceptBinFile() {
+        assertFalse(fileManager.isValidContainer(new File(getTestDataDir() + "example_class1.bin")));
     }
 
     public void testClassFile() throws IOException {

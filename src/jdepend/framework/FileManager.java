@@ -37,15 +37,19 @@ public class FileManager {
 
         File directory = new File(name);
 
-        if (directory.isDirectory() || acceptJarFile(directory)) {
+        if (isDirectoryOrContainer(directory)) {
             directories.add(directory);
         } else {
-            throw new IOException("Invalid directory or JAR file: " + name);
+            throw new IOException("Invalid directory or Container file: " + name);
         }
     }
 
+    private boolean isDirectoryOrContainer(File directory) {
+        return directory.isDirectory() || isValidContainer(directory);
+    }
+
     public boolean acceptFile(File file) {
-        return acceptClassFile(file) || acceptJarFile(file);
+        return acceptClassFile(file) || isValidContainer(file);
     }
 
     public boolean acceptClassFile(File file) {
@@ -70,7 +74,7 @@ public class FileManager {
         return true;
     }
 
-    public boolean acceptJarFile(File file) {
+    public boolean isValidContainer(File file) {
         return isJar(file) || isZip(file) || isWar(file);
     }
 
