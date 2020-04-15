@@ -116,7 +116,7 @@ public class JarFileParserTest extends JDependTestCase {
         assertEquals(15, jdepend.countClasses());
 
         jdepend.analyzeInnerClasses(false);
-        assertEquals(8, jdepend.countClasses());
+        assertEquals(12, jdepend.countClasses());
     }
 
     private void assertClassesExist(Collection classes) {
