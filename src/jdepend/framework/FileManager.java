@@ -34,14 +34,7 @@ public class FileManager {
     }
 
     public void addDirectory(String fileName) throws IOException {
-
-        File directory = new File(fileName);
-
-        if (isDirectoryOrContainer(directory)) {
-            directories.add(directory);
-        } else {
-            throw new IOException("Invalid directory or Container file: " + fileName);
-        }
+        directories.add(new ClassContainer(fileName).getFile());
     }
 
     public boolean acceptClassFile(File file) {
@@ -102,10 +95,6 @@ public class FileManager {
                 }
             }
         }
-    }
-
-    private boolean isDirectoryOrContainer(File directory) {
-        return directory.isDirectory() || isValidContainer(directory);
     }
 
     private void addFile(File f, Collection files) {
