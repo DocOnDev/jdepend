@@ -7,9 +7,6 @@ public class ClassContainer extends ClassContainerBase {
 
     public ClassContainer(String source) throws IOException {
         super(source);
-        if (isNotAFile() || isNotAContainer()) {
-            throw new IOException("Invalid directory or Container file: " + source);
-        }
     }
 
     @Override
