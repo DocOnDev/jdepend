@@ -14,7 +14,7 @@ import java.util.*;
 
 public class FileManager {
 
-    private ArrayList<ClassContainerBase> classContainers = new ArrayList<>();
+    private ArrayList<ClassContainer> classContainers = new ArrayList<>();
     private boolean acceptInnerClasses;
 
 
@@ -33,8 +33,7 @@ public class FileManager {
     }
 
     public void addDirectory(String fileName) throws IOException {
-        ClassContainerBase classContainer = ClassContainerFactory.getContainer(fileName);
-        classContainers.add(classContainer);
+        classContainers.add(ClassContainerFactory.getContainer(fileName));
     }
 
     public boolean acceptClassFile(File file) {
@@ -64,7 +63,7 @@ public class FileManager {
 
         Collection files = new TreeSet();
 
-        for (ClassContainerBase container : classContainers ) {
+        for (ClassContainer container : classContainers ) {
             collectFiles(container.getFile(), files);
         }
 
