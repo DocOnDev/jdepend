@@ -11,7 +11,7 @@ public class ClassContainer extends ClassContainerBase {
 
     @Override
     protected boolean isNotAContainer() {
-        return !location.isDirectory() && !isContainerFile();
+        return !getFile().isDirectory() && !isContainerFile();
     }
 
     private boolean isContainerFile() {
@@ -19,10 +19,7 @@ public class ClassContainer extends ClassContainerBase {
     }
 
     private boolean hasExtension(String ext) {
-        return location.getName().endsWith(ext);
+        return getFile().getName().endsWith(ext);
     }
 
-    public File getFile() {
-        return location;
-    }
 }

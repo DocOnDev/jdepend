@@ -8,5 +8,5 @@ public class DirectoryClassContainer extends ClassContainerBase {
     }
 
     @Override
-    protected boolean isNotAContainer() { return !location.isDirectory(); }
+    protected boolean isNotAContainer() { return !getFile().isDirectory(); }
 }

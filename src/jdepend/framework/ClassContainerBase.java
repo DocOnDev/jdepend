@@ -18,4 +18,8 @@ abstract class ClassContainerBase {
     }
 
     protected abstract boolean isNotAContainer();
+
+    public File getFile() {
+        return location;
+    }
 }

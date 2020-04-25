@@ -15,7 +15,7 @@ public class ArchiveClassContainer extends ClassContainerBase {
     }
 
     private boolean hasExtension(String ext) {
-        return location.getName().endsWith(ext);
+        return getFile().getName().endsWith(ext);
     }
 
 }
