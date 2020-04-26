@@ -2,6 +2,7 @@ package jdepend.framework;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The <code>FileManager</code> class is responsible for extracting 
@@ -64,42 +65,34 @@ public class FileManager {
         Collection files = new TreeSet();
 
         for (ClassContainer container : classContainers ) {
-            collectFiles(container.getFile(), files);
+            files.addAll(collectFiles(container.getFile()));
         }
 
         return files;
     }
 
-    private boolean acceptFile(File file) {
-        return acceptClassFile(file) || isValidContainer(file);
-    }
+    private Collection collectFiles(File directory) {
 
-    private void collectFiles(File directory, Collection files) {
-
+        Collection files = new TreeSet();
         if (directory.isFile()) {
-
-            addFile(directory, files);
-
+            files.add(directory);
         } else {
 
-            String[] directoryFiles = directory.list();
-
-            for (int i = 0; i < directoryFiles.length; i++) {
-
-                File file = new File(directory, directoryFiles[i]);
+            for ( String fileName : directory.list()) {
+                File file = new File(directory, fileName);
                 if (acceptFile(file)) {
-                    addFile(file, files);
+                    files.add(file);
                 } else if (file.isDirectory()) {
-                    collectFiles(file, files);
+                    files.addAll(collectFiles(file));
                 }
             }
         }
+
+        return (Collection) files.stream().distinct().collect(Collectors.toList());
     }
 
-    private void addFile(File f, Collection files) {
-        if (!files.contains(f)) {
-            files.add(f);
-        }
+    private boolean acceptFile(File file) {
+        return acceptClassFile(file) || isValidContainer(file);
     }
 
     private boolean isWar(File file) {
