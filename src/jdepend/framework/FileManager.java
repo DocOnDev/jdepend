@@ -65,10 +65,14 @@ public class FileManager {
         Collection files = new TreeSet();
 
         for (ClassContainer container : classContainers ) {
-            files.addAll(collectFiles(container.getFile()));
+            files.addAll(collectFiles(container));
         }
 
         return files;
+    }
+
+    private Collection<File> collectFiles(ClassContainer container) {
+        return collectFiles(container.getFile());
     }
 
     private Collection collectFiles(File directory) {
