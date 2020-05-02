@@ -25,7 +25,7 @@ abstract class ClassContainer {
         return location;
     }
 
-    ArrayList<File> collectContainerFiles() {
+    ArrayList<File> collectFiles() {
         return new ArrayList<>(Arrays.asList(getFile()));
     }
 }

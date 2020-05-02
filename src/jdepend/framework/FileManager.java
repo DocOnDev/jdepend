@@ -72,7 +72,7 @@ public class FileManager {
     }
 
     private Collection<File> collectFiles(ClassContainer container) {
-        if (container instanceof ArchiveClassContainer) { return container.collectContainerFiles(); }
+        if (container instanceof ArchiveClassContainer) { return container.collectFiles(); }
         return collectFiles(container.getFile());
     }
 
