@@ -2,7 +2,6 @@ package jdepend.framework;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * The <code>FileManager</code> class is responsible for extracting 
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
-    private ClassContainers classContainers = new ClassContainers();
+    ClassContainers classContainers = new ClassContainers();
 
     public FileManager() {
         acceptInnerClasses(true);
@@ -36,15 +35,7 @@ public class FileManager {
     }
 
     public boolean acceptClassFile(File file) {
-        return file.isFile() && acceptClassFileName(file.getName());
-    }
-
-    public boolean acceptClassFileName(String name) {
-        if (!classContainers.acceptInnerClasses() && name.toLowerCase().indexOf("$") > 0) {
-            return false;
-        }
-
-        return name.toLowerCase().endsWith(".class");
+        return file.isFile() && classContainers.acceptClassFileName(file.getName());
     }
 
     public boolean isValidContainer(File file) {
@@ -52,44 +43,7 @@ public class FileManager {
     }
 
     public Collection<File> extractFiles() {
-        return extractFiles(classContainers);
-    }
-
-    private Collection<File> extractFiles(ClassContainers containers) {
-
-        Collection files = new TreeSet();
-
-        for (ClassContainer container : containers ) {
-            files.addAll(collectFiles(container));
-        }
-
-        return files;
-    }
-
-    private Collection<File> collectFiles(ClassContainer container) {
-        if (container instanceof ArchiveClassContainer) { return container.collectFiles(); }
-        File directory = container.getFile();
-
-        Collection files = new TreeSet();
-        for ( String fileName : directory.list()) {
-            File file = new File(directory, fileName);
-            if (acceptFile(file)) {
-                files.add(file);
-            } else if (file.isDirectory()) {
-                try {
-                    ClassContainer subContainer = ClassContainerFactory.getContainer(file.getPath());
-                    files.addAll(collectFiles(subContainer));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return (Collection) files.stream().distinct().collect(Collectors.toList());
-    }
-
-    private boolean acceptFile(File file) {
-        return acceptClassFile(file) || isValidContainer(file);
+        return classContainers.extractFiles();
     }
 
     private boolean isWar(File file) {

@@ -25,7 +25,14 @@ abstract class ClassContainer {
         return location;
     }
 
-    ArrayList<File> collectFiles() {
-        return new ArrayList<>(Arrays.asList(getFile()));
+    boolean acceptClassFileName(String name, boolean allowInnerClasses) {
+        if (!allowInnerClasses && name.toLowerCase().indexOf("$") > 0) {
+            return false;
+        }
+
+        return name.toLowerCase().endsWith(".class");
     }
+
+
+    protected abstract ArrayList<File> collectFiles(boolean allowInnerClasses);
 }
