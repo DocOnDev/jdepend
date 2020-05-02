@@ -72,12 +72,8 @@ public class FileManager {
     }
 
     private Collection<File> collectFiles(ClassContainer container) {
-        if (container instanceof ArchiveClassContainer) { return collectContainerFiles(container); }
+        if (container instanceof ArchiveClassContainer) { return container.collectContainerFiles(); }
         return collectFiles(container.getFile());
-    }
-
-    private ArrayList<File> collectContainerFiles(ClassContainer container) {
-        return new ArrayList<>(Arrays.asList(container.getFile()));
     }
 
     private Collection collectFiles(File directory) {
