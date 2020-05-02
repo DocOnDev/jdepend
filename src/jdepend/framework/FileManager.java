@@ -16,11 +16,9 @@ import java.util.stream.Collectors;
 public class FileManager {
 
     private ClassContainers classContainers = new ClassContainers();
-    private boolean acceptInnerClasses;
-
 
     public FileManager() {
-        acceptInnerClasses = true;
+        acceptInnerClasses(true);
     }
 
     /**
@@ -30,7 +28,7 @@ public class FileManager {
      *          <code>false</code> otherwise.
      */
     public void acceptInnerClasses(boolean b) {
-        acceptInnerClasses = b;
+        classContainers.acceptInnerClasses(b);
     }
 
     public void addDirectory(String fileName) throws IOException {
@@ -42,7 +40,7 @@ public class FileManager {
     }
 
     public boolean acceptClassFileName(String name) {
-        if (!acceptInnerClasses && name.toLowerCase().indexOf("$") > 0) {
+        if (!classContainers.acceptInnerClasses() && name.toLowerCase().indexOf("$") > 0) {
             return false;
         }
 
