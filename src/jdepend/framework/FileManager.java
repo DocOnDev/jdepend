@@ -72,23 +72,19 @@ public class FileManager {
     }
 
     private Collection<File> collectFiles(ClassContainer container) {
+        if (container instanceof ArchiveClassContainer) { return new ArrayList<>(Arrays.asList(container.getFile())); }
         return collectFiles(container.getFile());
     }
 
     private Collection collectFiles(File directory) {
 
         Collection files = new TreeSet();
-        if (directory.isFile()) {
-            files.add(directory);
-        } else {
-
-            for ( String fileName : directory.list()) {
-                File file = new File(directory, fileName);
-                if (acceptFile(file)) {
-                    files.add(file);
-                } else if (file.isDirectory()) {
-                    files.addAll(collectFiles(file));
-                }
+        for ( String fileName : directory.list()) {
+            File file = new File(directory, fileName);
+            if (acceptFile(file)) {
+                files.add(file);
+            } else if (file.isDirectory()) {
+                files.addAll(collectFiles(file));
             }
         }
 
