@@ -15,7 +15,10 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
-    private ArrayList<ClassContainer> classContainers = new ArrayList<>();
+    class ClassContainers extends ArrayList<ClassContainer> {
+    }
+
+    private ClassContainers classContainers = new ClassContainers();
     private boolean acceptInnerClasses;
 
 
@@ -42,18 +45,11 @@ public class FileManager {
     }
 
     public boolean acceptClassFileName(String name) {
-
-        if (!acceptInnerClasses) {
-            if (name.toLowerCase().indexOf("$") > 0) {
-                return false;
-            }
-        }
-
-        if (!name.toLowerCase().endsWith(".class")) {
+        if (!acceptInnerClasses && name.toLowerCase().indexOf("$") > 0) {
             return false;
         }
 
-        return true;
+        return name.toLowerCase().endsWith(".class");
     }
 
     public boolean isValidContainer(File file) {
@@ -61,10 +57,14 @@ public class FileManager {
     }
 
     public Collection<File> extractFiles() {
+        return extractFiles(classContainers);
+    }
+
+    private Collection<File> extractFiles(ArrayList<ClassContainer> containers) {
 
         Collection files = new TreeSet();
 
-        for (ClassContainer container : classContainers ) {
+        for (ClassContainer container : containers ) {
             files.addAll(collectFiles(container));
         }
 
