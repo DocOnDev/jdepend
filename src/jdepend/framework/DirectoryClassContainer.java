@@ -18,8 +18,7 @@ public class DirectoryClassContainer extends ClassContainer {
     @Override
     protected ArrayList<File> collectFiles(boolean allowInnerFiles) {
         Collection files = new TreeSet();
-        for (String fileName : getFile().list()) {
-            File file = new File(getFile(), fileName);
+        for ( File file : this.getFiles() ) {
             try {
                 ClassContainer subContainer = ClassContainerFactory.getContainer(file.getPath());
                 files.addAll(subContainer.collectFiles(allowInnerFiles));
@@ -31,5 +30,13 @@ public class DirectoryClassContainer extends ClassContainer {
         }
 
         return (ArrayList<File>) files.stream().distinct().collect(Collectors.toList());
+    }
+
+    private Collection<File> getFiles() {
+        Collection<File> files = new ArrayList<>();
+        for (String fileName : getFile().list()) {
+            files.add(new File(getFile(), fileName));
+        }
+        return files;
     }
 }
