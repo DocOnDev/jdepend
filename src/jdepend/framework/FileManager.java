@@ -79,25 +79,11 @@ public class FileManager {
                 files.add(file);
             } else if (file.isDirectory()) {
                 try {
-                    files.addAll(collectFiles(ClassContainerFactory.getContainer(file.getPath())));
+                    ClassContainer subContainer = ClassContainerFactory.getContainer(file.getPath());
+                    files.addAll(collectFiles(subContainer));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-        }
-
-        return (Collection) files.stream().distinct().collect(Collectors.toList());
-    }
-
-    private Collection collectFiles(File directory) {
-
-        Collection files = new TreeSet();
-        for ( String fileName : directory.list()) {
-            File file = new File(directory, fileName);
-            if (acceptFile(file)) {
-                files.add(file);
-            } else if (file.isDirectory()) {
-                files.addAll(collectFiles(file));
             }
         }
 

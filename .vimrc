@@ -1,0 +1,1 @@
+/Users/doc/bash_conf/.vimrc

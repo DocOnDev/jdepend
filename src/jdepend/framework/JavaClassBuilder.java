@@ -78,10 +78,7 @@ public class JavaClassBuilder {
             InputStream is = null;
             try {
                 is = new BufferedInputStream(new FileInputStream(file));
-                JavaClass parsedClass = parser.parse(is);
-                Collection javaClasses = new ArrayList();
-                javaClasses.add(parsedClass);
-                return javaClasses;
+                return new ArrayList(Arrays.asList(parser.parse(is)));
             } finally {
                 if (is != null) {
                     is.close();
@@ -119,8 +116,7 @@ public class JavaClassBuilder {
                 InputStream is = null;
                 try {
 	                is = new BufferedInputStream(file.getInputStream(e));
-                    JavaClass jc = parser.parse(is);
-                    javaClasses.add(jc);
+                    javaClasses.add(parser.parse(is));
                 } finally {
                     is.close();
                 }
