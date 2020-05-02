@@ -57,7 +57,7 @@ public class FileManager {
         return extractFiles(classContainers);
     }
 
-    private Collection<File> extractFiles(ArrayList<ClassContainer> containers) {
+    private Collection<File> extractFiles(ClassContainers containers) {
 
         Collection files = new TreeSet();
 
@@ -70,7 +70,23 @@ public class FileManager {
 
     private Collection<File> collectFiles(ClassContainer container) {
         if (container instanceof ArchiveClassContainer) { return container.collectFiles(); }
-        return collectFiles(container.getFile());
+        File directory = container.getFile();
+
+        Collection files = new TreeSet();
+        for ( String fileName : directory.list()) {
+            File file = new File(directory, fileName);
+            if (acceptFile(file)) {
+                files.add(file);
+            } else if (file.isDirectory()) {
+                try {
+                    files.addAll(collectFiles(ClassContainerFactory.getContainer(file.getPath())));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return (Collection) files.stream().distinct().collect(Collectors.toList());
     }
 
     private Collection collectFiles(File directory) {
