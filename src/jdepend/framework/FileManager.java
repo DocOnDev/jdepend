@@ -15,9 +15,6 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
-    class ClassContainers extends ArrayList<ClassContainer> {
-    }
-
     private ClassContainers classContainers = new ClassContainers();
     private boolean acceptInnerClasses;
 
