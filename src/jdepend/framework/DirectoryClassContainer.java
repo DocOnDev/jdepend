@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class DirectoryClassContainer extends ClassContainer {
@@ -17,7 +16,7 @@ public class DirectoryClassContainer extends ClassContainer {
 
     @Override
     protected ArrayList<File> collectFiles(boolean allowInnerFiles) {
-        Collection files = new TreeSet();
+        ArrayList<File> files = new ArrayList<>();
         for ( File file : this.getFiles() ) {
             try {
                 ClassContainer subContainer = ClassContainerFactory.getContainer(file.getPath());

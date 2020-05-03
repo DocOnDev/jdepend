@@ -3,7 +3,6 @@ package jdepend.framework;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 abstract class ClassContainer {
     protected final File location;
