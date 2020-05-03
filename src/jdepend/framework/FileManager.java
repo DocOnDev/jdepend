@@ -93,25 +93,6 @@ public class FileManager {
         return files.stream().distinct().collect(Collectors.toList());
     }
 
-    private Collection<File> collectFiles(File directory) {
-
-        Collection<File> files = new ArrayList<>();
-
-        String[] directoryFiles = directory.list();
-
-        for (int i = 0; i < directoryFiles.length; i++) {
-
-            File file = new File(directory, directoryFiles[i]);
-            if (acceptFile(file)) {
-                files.add(file);
-            } else if (file.isDirectory()) {
-                files.addAll(collectFiles(file));
-            }
-        }
-
-        return files.stream().distinct().collect(Collectors.toList());
-    }
-
     private boolean acceptFile(File file) {
         return acceptClassFile(file) || isValidContainer(file);
     }
