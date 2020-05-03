@@ -65,24 +65,20 @@ public class FileManager {
         Collection files = new TreeSet();
 
         for (ClassContainer container : classContainers ) {
-            files.addAll(collectFiles(container.getFile()));
+            files.addAll(collectFiles(container));
         }
 
         return files;
     }
 
-    private boolean acceptFile(File file) {
-        return acceptClassFile(file) || isValidContainer(file);
+    private Collection collectFiles(ClassContainer container) {
+        if (container instanceof ArchiveClassContainer) { return new ArrayList(Arrays.asList(container.getFile())); }
+        return collectFiles(container.getFile());
     }
 
     private Collection<File> collectFiles(File directory) {
 
         Collection<File> files = new ArrayList<>();
-
-        if (directory.isFile()) {
-            files.add(directory);
-            return files;
-        }
 
         String[] directoryFiles = directory.list();
 
@@ -97,6 +93,10 @@ public class FileManager {
         }
 
         return files.stream().distinct().collect(Collectors.toList());
+    }
+
+    private boolean acceptFile(File file) {
+        return acceptClassFile(file) || isValidContainer(file);
     }
 
     private boolean isWar(File file) {
