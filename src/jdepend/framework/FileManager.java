@@ -77,9 +77,7 @@ public class FileManager {
     private void collectFiles(File directory, Collection files) {
 
         if (directory.isFile()) {
-
-            addFile(directory, files);
-
+            files.add(directory);
         } else {
 
             String[] directoryFiles = directory.list();
@@ -88,17 +86,11 @@ public class FileManager {
 
                 File file = new File(directory, directoryFiles[i]);
                 if (acceptFile(file)) {
-                    addFile(file, files);
+                    files.add(file);
                 } else if (file.isDirectory()) {
                     collectFiles(file, files);
                 }
             }
-        }
-    }
-
-    private void addFile(File f, Collection files) {
-        if (!files.contains(f)) {
-            files.add(f);
         }
     }
 
