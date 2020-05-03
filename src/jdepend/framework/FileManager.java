@@ -73,7 +73,24 @@ public class FileManager {
 
     private Collection collectFiles(ClassContainer container) {
         if (container instanceof ArchiveClassContainer) { return container.collectFiles(); }
-        return collectFiles(container.getFile());
+        File directory = container.getFile();
+
+        Collection<File> files = new ArrayList<>();
+
+        for (String fileName : directory.list()) {
+            File file = new File(directory, fileName);
+            if (acceptFile(file)) {
+                files.add(file);
+            } else if (file.isDirectory()) {
+                try {
+                    files.addAll(collectFiles(ClassContainerFactory.getContainer(file.getPath())));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return files.stream().distinct().collect(Collectors.toList());
     }
 
     private Collection<File> collectFiles(File directory) {
