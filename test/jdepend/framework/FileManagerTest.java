@@ -19,7 +19,7 @@ public class FileManagerTest extends JDependTestCase {
     protected void setUp() {
         super.setUp();
         fileManager = new FileManager();
-        fileManager.acceptInnerClasses(false);
+        fileManager.classContainers.acceptInnerClasses(false);
     }
 
     protected void tearDown() {
@@ -27,12 +27,12 @@ public class FileManagerTest extends JDependTestCase {
     }
 
     public void testExtractFiles_EmptyFileManager_ZeroSize() {
-        assertEquals(0, fileManager.extractFiles().size());
+        assertEquals(0, fileManager.classContainers.extractFiles().size());
     }
 
     public void testAddDirectory_BuildDirectory_44Files() throws IOException {
         fileManager.classContainers.addDirectory(getBuildDir());
-        assertEquals(44, fileManager.extractFiles().size());
+        assertEquals(44, fileManager.classContainers.extractFiles().size());
     }
 
     public void testAddDirectory_NonExistentDirectory_IOError() {
