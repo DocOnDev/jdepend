@@ -17,6 +17,7 @@ public class JavaClassBuilder {
 
     private AbstractParser parser;
     private FileManager fileManager;
+    private ClassContainers classContainers = new ClassContainers();
 
     
     public JavaClassBuilder() {
@@ -30,6 +31,15 @@ public class JavaClassBuilder {
     public JavaClassBuilder(AbstractParser parser, FileManager fm) {
         this.parser = parser;
         this.fileManager = fm;
+        this.classContainers.acceptInnerClasses(fm.acceptInnerClasses());
+        this.fileManager.classContainers = this.classContainers;
+    }
+
+    public JavaClassBuilder(AbstractParser parser, ClassContainers classContainers) {
+        this.parser = parser;
+        this.fileManager = new FileManager();
+        this.fileManager.classContainers = classContainers;
+        this.classContainers = classContainers;
     }
 
     public int countClasses() {
@@ -40,7 +50,7 @@ public class JavaClassBuilder {
             }
         };
 
-        JavaClassBuilder builder = new JavaClassBuilder(counter, fileManager);
+        JavaClassBuilder builder = new JavaClassBuilder(counter, classContainers);
         Collection classes = builder.build();
         return classes.size();
     }
@@ -54,7 +64,7 @@ public class JavaClassBuilder {
 
         Collection classes = new ArrayList();
 
-        for (File file : fileManager.extractFiles()) {
+        for (File file : fileManager.classContainers.extractFiles()) {
             try {
                 classes.addAll(buildClasses(file));
             } catch (IOException ioe) {
@@ -74,7 +84,7 @@ public class JavaClassBuilder {
      */
     public Collection buildClasses(File file) throws IOException {
 
-        if (fileManager.acceptClassFile(file)) {
+        if (fileManager.classContainers.acceptClassFile(file)) {
             InputStream is = null;
             try {
                 is = new BufferedInputStream(new FileInputStream(file));
@@ -84,7 +94,7 @@ public class JavaClassBuilder {
                     is.close();
                 }
             }
-        } else if (fileManager.isValidContainer(file)) {
+        } else if (fileManager.classContainers.isValidContainer(file)) {
 
             JarFile jarFile = new JarFile(file);
             Collection result = buildClasses(jarFile);

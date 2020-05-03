@@ -31,7 +31,7 @@ public class FileManagerTest extends JDependTestCase {
     }
 
     public void testAddDirectory_BuildDirectory_44Files() throws IOException {
-        fileManager.addDirectory(getBuildDir());
+        fileManager.classContainers.addDirectory(getBuildDir());
         assertEquals(44, fileManager.extractFiles().size());
     }
 
@@ -48,32 +48,32 @@ public class FileManagerTest extends JDependTestCase {
     }
 
     public void testIsValidContainer_JarFile_True() {
-        assertTrue(fileManager.isValidContainer(new File(getTestDataDir()+ "test.jar")));
+        assertTrue(fileManager.classContainers.isValidContainer(new File(getTestDataDir()+ "test.jar")));
     }
 
     public void testIsValidContainer_ZipFile_True() {
-        assertTrue(fileManager.isValidContainer(new File(getTestDataDir() + "test.zip")));
+        assertTrue(fileManager.classContainers.isValidContainer(new File(getTestDataDir() + "test.zip")));
     }
 
     public void testIsValidContainer_BinFile_False() {
-        assertFalse(fileManager.isValidContainer(new File(getTestDataDir() + "example_class1.bin")));
+        assertFalse(fileManager.classContainers.isValidContainer(new File(getTestDataDir() + "example_class1.bin")));
     }
 
     public void testAcceptClassFile_ValidClassFile_True() throws IOException {
-        assertTrue(fileManager.acceptClassFile(new File(getBuildDir() + getPackageSubDir() + "JDepend.class")));
+        assertTrue(fileManager.classContainers.acceptClassFile(new File(getBuildDir() + getPackageSubDir() + "JDepend.class")));
     }
 
     public void testAcceptClassFile_NonExistentClassFile_False() {
-        assertFalse(fileManager.acceptClassFile(new File(getBuildDir() + "JDepend.class")));
+        assertFalse(fileManager.classContainers.acceptClassFile(new File(getBuildDir() + "JDepend.class")));
     }
 
     public void testAcceptClassFile_InvalidClassFile_False() {
-        assertFalse(fileManager.acceptClassFile(new File(getHomeDir() + "build.xml")));
+        assertFalse(fileManager.classContainers.acceptClassFile(new File(getHomeDir() + "build.xml")));
     }
 
     private void assertIOError(String fileName, String errorReason) {
         try {
-            fileManager.addDirectory(fileName);
+            fileManager.classContainers.addDirectory(fileName);
             fail(errorReason + " " + "Should raise IOException");
         } catch (IOException expected) {
             assertEquals("Invalid directory or Container file: " + fileName, expected.getMessage());
