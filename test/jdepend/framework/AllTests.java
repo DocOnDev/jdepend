@@ -20,7 +20,7 @@ public class AllTests {
         suite.addTestSuite(ConstraintTest.class);
         suite.addTestSuite(CycleTest.class);
         suite.addTestSuite(CollectAllCyclesTest.class);
-        suite.addTestSuite(FileManagerTest.class);
+        suite.addTestSuite(ClassContainersTest.class);
         suite.addTestSuite(FilterTest.class);
         suite.addTestSuite(MetricTest.class);
         suite.addTestSuite(PropertyConfiguratorTest.class);
