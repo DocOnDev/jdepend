@@ -54,9 +54,9 @@ public class JavaClassBuilder {
 
         Collection classes = new ArrayList();
 
-        for (File file : fileManager.extractFiles()) {              // returns archives and class files - this is broken.
+        for (File file : fileManager.extractFiles()) {
             try {
-                classes.addAll(buildClasses(file));                 // process class files AND
+                classes.addAll(buildClasses(file));
             } catch (IOException ioe) {
                 System.err.println("\n" + ioe.getMessage());
             }
