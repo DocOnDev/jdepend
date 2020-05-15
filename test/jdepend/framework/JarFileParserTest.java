@@ -73,7 +73,7 @@ public class JarFileParserTest extends JDependTestCase {
     public void testJarFileWithoutInnerClasses() throws IOException {
 
         FileManager fm = new FileManager();
-        fm.acceptInnerClasses(false);
+        fm.classContainers.acceptInnerClasses(false);
 
         JavaClassBuilder builder = new JavaClassBuilder(fm);
 
@@ -97,7 +97,7 @@ public class JarFileParserTest extends JDependTestCase {
     public void testZipFileWithoutInnerClasses() throws IOException {
 
         FileManager fm = new FileManager();
-        fm.acceptInnerClasses(false);
+        fm.classContainers.acceptInnerClasses(false);
 
         JavaClassBuilder builder = new JavaClassBuilder(fm);
 

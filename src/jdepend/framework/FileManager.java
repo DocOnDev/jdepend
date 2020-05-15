@@ -15,22 +15,11 @@ import java.util.stream.Collectors;
 
 public class FileManager {
 
-    private ClassContainers classContainers = new ClassContainers();
-    private boolean acceptInnerClasses;
+    ClassContainers classContainers = new ClassContainers();
 
 
     public FileManager() {
-        acceptInnerClasses = true;
-    }
-
-    /**
-     * Determines whether inner classes should be collected.
-     * 
-     * @param b <code>true</code> to collect inner classes; 
-     *          <code>false</code> otherwise.
-     */
-    public void acceptInnerClasses(boolean b) {
-        acceptInnerClasses = b;
+        classContainers.acceptInnerClasses(true);
     }
 
     public void addDirectory(String fileName) throws IOException {
@@ -43,7 +32,7 @@ public class FileManager {
 
     public boolean acceptClassFileName(String name) {
 
-        if (!acceptInnerClasses) {
+        if (!classContainers.acceptInnerClasses()) {
             if (name.toLowerCase().indexOf("$") > 0) {
                 return false;
             }
@@ -61,8 +50,12 @@ public class FileManager {
     }
 
     public Collection<File> extractFiles() {
+        return extractFiles(classContainers);
+    }
 
-        Collection files = new TreeSet();
+    private Collection<File> extractFiles(ClassContainers classContainers) {
+
+    Collection files = new TreeSet();
 
         for (ClassContainer container : classContainers ) {
             files.addAll(collectFiles(container));

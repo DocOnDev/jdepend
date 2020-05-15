@@ -19,7 +19,7 @@ public class FileManagerTest extends JDependTestCase {
     protected void setUp() {
         super.setUp();
         fileManager = new FileManager();
-        fileManager.acceptInnerClasses(false);
+        fileManager.classContainers.acceptInnerClasses(false);
     }
 
     protected void tearDown() {
