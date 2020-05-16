@@ -62,9 +62,8 @@ public class FileManager {
 
         for (String fileName : directory.list()) {
             File file = new File(directory, fileName);
-            ClassContainer subContainer = null;
             try {
-                subContainer = ClassContainerFactory.getContainer(file.getPath());
+                ClassContainer subContainer = ClassContainerFactory.getContainer(file.getPath());
                 files.addAll(collectFiles(subContainer));
             } catch (IOException e) {
                 if (classContainers.acceptClassFileName(file.getName())) {
@@ -73,10 +72,6 @@ public class FileManager {
             }
         }
         return files.stream().distinct().collect(Collectors.toList());
-    }
-
-    private boolean acceptFile(File file) {
-        return acceptClassFile(file) || isValidContainer(file);
     }
 
     private boolean isWar(File file) {
