@@ -30,18 +30,7 @@ public class FileManager {
     }
 
     public boolean acceptClassFile(File file) {
-        return file.isFile() && acceptClassFileName(file.getName());
-    }
-
-    public boolean acceptClassFileName(String name) {
-
-        if (!classContainers.acceptInnerClasses()) {
-            if (name.toLowerCase().indexOf("$") > 0) {
-                return false;
-            }
-        }
-
-        return name.toLowerCase().endsWith(".class");
+        return file.isFile() && classContainers.acceptClassFileName(file.getName());
     }
 
     public boolean isValidContainer(File file) {
@@ -78,7 +67,7 @@ public class FileManager {
                 subContainer = ClassContainerFactory.getContainer(file.getPath());
                 files.addAll(collectFiles(subContainer));
             } catch (IOException e) {
-                if (acceptClassFileName(file.getName())) {
+                if (classContainers.acceptClassFileName(file.getName())) {
                     files.add(file);
                 }
             }

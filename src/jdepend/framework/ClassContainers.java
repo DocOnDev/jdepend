@@ -18,4 +18,15 @@ class ClassContainers extends ArrayList<ClassContainer> {
     public boolean acceptInnerClasses() {
         return this.acceptInnerClasses;
     }
+
+    public boolean acceptClassFileName(String name) {
+
+        if (!acceptInnerClasses()) {
+            if (name.toLowerCase().indexOf("$") > 0) {
+                return false;
+            }
+        }
+
+        return name.toLowerCase().endsWith(".class");
+    }
 }

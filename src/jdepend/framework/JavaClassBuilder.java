@@ -115,7 +115,7 @@ public class JavaClassBuilder {
         Enumeration entries = file.entries();
         while (entries.hasMoreElements()) {
             ZipEntry e = (ZipEntry) entries.nextElement();
-            if (fileManager.acceptClassFileName(e.getName())) {
+            if (fileManager.classContainers.acceptClassFileName(e.getName())) {
                 InputStream is = null;
                 try {
 	                is = new BufferedInputStream(file.getInputStream(e));
