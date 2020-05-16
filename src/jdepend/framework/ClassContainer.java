@@ -14,6 +14,11 @@ abstract class ClassContainer {
         }
     }
 
+    public static boolean acceptClassFileName(String name, boolean acceptInnerClasses) {
+        if (!acceptInnerClasses && (name.toLowerCase().indexOf("$") > 0)) return false;
+        return name.toLowerCase().endsWith(".class");
+    }
+
     protected boolean isNotAFile() {
         return !location.exists();
     }

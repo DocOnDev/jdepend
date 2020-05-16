@@ -20,7 +20,6 @@ class ClassContainers extends ArrayList<ClassContainer> {
     }
 
     public boolean acceptClassFileName(String name) {
-        if (!acceptInnerClasses() && (name.toLowerCase().indexOf("$") > 0)) return false;
-        return name.toLowerCase().endsWith(".class");
+        return ClassContainer.acceptClassFileName(name, acceptInnerClasses());
     }
 }
