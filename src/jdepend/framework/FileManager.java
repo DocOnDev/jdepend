@@ -1,14 +1,17 @@
 package jdepend.framework;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
- * The <code>FileManager</code> class is responsible for extracting 
- * Java class files (<code>.class</code> files) from a collection of 
+ * The <code>FileManager</code> class is responsible for extracting
+ * Java class files (<code>.class</code> files) from a collection of
  * registered directories.
- * 
+ *
  * @author <b>Mike Clark</b>
  * @author Clarkware Consulting, Inc.
  */
@@ -38,11 +41,7 @@ public class FileManager {
             }
         }
 
-        if (!name.toLowerCase().endsWith(".class")) {
-            return false;
-        }
-
-        return true;
+        return name.toLowerCase().endsWith(".class");
     }
 
     public boolean isValidContainer(File file) {
@@ -55,9 +54,9 @@ public class FileManager {
 
     private Collection<File> extractFiles(ClassContainers classContainers) {
 
-    Collection files = new TreeSet();
+        Collection files = new TreeSet();
 
-        for (ClassContainer container : classContainers ) {
+        for (ClassContainer container : classContainers) {
             files.addAll(collectFiles(container));
         }
 
@@ -65,24 +64,25 @@ public class FileManager {
     }
 
     private Collection collectFiles(ClassContainer container) {
-        if (container instanceof ArchiveClassContainer) { return container.collectFiles(); }
+        if (container instanceof ArchiveClassContainer) {
+            return container.collectFiles();
+        }
         File directory = container.getFile();
 
         Collection<File> files = new ArrayList<>();
 
         for (String fileName : directory.list()) {
             File file = new File(directory, fileName);
-            if (acceptFile(file)) {
-                files.add(file);
-            } else if (file.isDirectory()) {
-                try {
-                    files.addAll(collectFiles(ClassContainerFactory.getContainer(file.getPath())));
-                } catch (IOException e) {
-                    e.printStackTrace();
+            ClassContainer subContainer = null;
+            try {
+                subContainer = ClassContainerFactory.getContainer(file.getPath());
+                files.addAll(collectFiles(subContainer));
+            } catch (IOException e) {
+                if (acceptClassFileName(file.getName())) {
+                    files.add(file);
                 }
             }
         }
-
         return files.stream().distinct().collect(Collectors.toList());
     }
 
@@ -97,12 +97,14 @@ public class FileManager {
     private boolean isZip(File file) {
         return existsWithExtension(file, ".zip");
     }
- 
-    private boolean isJar(File file) { return existsWithExtension(file, ".jar"); }
+
+    private boolean isJar(File file) {
+        return existsWithExtension(file, ".jar");
+    }
 
     private boolean existsWithExtension(File file, String extension) {
         return file.isFile() &&
-            file.getName().toLowerCase().endsWith(extension);
+                file.getName().toLowerCase().endsWith(extension);
     }
 
 }
