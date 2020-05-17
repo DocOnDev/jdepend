@@ -54,7 +54,7 @@ public class JavaClassBuilder {
 
         Collection classes = new ArrayList();
 
-        for (File file : fileManager.extractFiles()) {
+        for (File file : fileManager.classContainers.extractFiles()) {
             try {
                 classes.addAll(buildClasses(file));
             } catch (IOException ioe) {
@@ -74,7 +74,7 @@ public class JavaClassBuilder {
      */
     public Collection buildClasses(File file) throws IOException {
 
-        if (fileManager.acceptClassFile(file)) {
+        if (file.isFile() && fileManager.classContainers.acceptClassFileName(file.getName())) {
             InputStream is = null;
             try {
                 is = new BufferedInputStream(new FileInputStream(file));
@@ -87,7 +87,7 @@ public class JavaClassBuilder {
                     is.close();
                 }
             }
-        } else if (fileManager.isValidContainer(file)) {
+        } else if (fileManager.classContainers.isValidContainer(file)) {
 
             JarFile jarFile = new JarFile(file);
             Collection result = buildClasses(jarFile);

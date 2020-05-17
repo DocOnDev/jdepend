@@ -153,7 +153,7 @@ public class JDepend {
      * @throws IOException If the directory is invalid.
      */
     public void addDirectory(String name) throws IOException {
-        fileManager.addDirectory(name);
+        fileManager.classContainers.add(ClassContainerFactory.getContainer(name));
     }
     
     /**
