@@ -177,7 +177,7 @@ public class JDepend {
      *          <code>false</code> otherwise.
      */
     public void analyzeInnerClasses(boolean b) {
-        fileManager.acceptInnerClasses(b);
+        fileManager.classContainers.acceptInnerClasses(b);
     }
 
     /**

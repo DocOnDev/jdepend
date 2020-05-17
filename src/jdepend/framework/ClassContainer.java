@@ -2,6 +2,8 @@ package jdepend.framework;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 abstract class ClassContainer {
     protected final File location;
@@ -21,5 +23,9 @@ abstract class ClassContainer {
 
     public File getFile() {
         return location;
+    }
+
+    ArrayList collectFiles() {
+        return new ArrayList(Arrays.asList(getFile()));
     }
 }
