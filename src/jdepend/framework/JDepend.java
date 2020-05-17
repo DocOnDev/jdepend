@@ -103,7 +103,7 @@ import java.util.*;
 public class JDepend {
 
     private HashMap packages;
-    private FileManager fileManager;
+    private ClassContainers classContainers;
     private PackageFilter filter;
     private ClassFileParser parser;
     private JavaClassBuilder builder;
@@ -118,10 +118,10 @@ public class JDepend {
         setFilter(filter);
 
         this.packages = new HashMap();
-        this.fileManager = new FileManager();
+        this.classContainers = new ClassContainers();
 
         this.parser = new ClassFileParser(filter);
-        this.builder = new JavaClassBuilder(parser, fileManager);
+        this.builder = new JavaClassBuilder(parser, classContainers);
 
         PropertyConfigurator config = new PropertyConfigurator();
         addPackages(config.getConfiguredPackages());
@@ -153,7 +153,7 @@ public class JDepend {
      * @throws IOException If the directory is invalid.
      */
     public void addDirectory(String name) throws IOException {
-        fileManager.classContainers.add(ClassContainerFactory.getContainer(name));
+        classContainers.add(ClassContainerFactory.getContainer(name));
     }
     
     /**
@@ -177,7 +177,7 @@ public class JDepend {
      *          <code>false</code> otherwise.
      */
     public void analyzeInnerClasses(boolean b) {
-        fileManager.classContainers.acceptInnerClasses(b);
+        classContainers.acceptInnerClasses(b);
     }
 
     /**

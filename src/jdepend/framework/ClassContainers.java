@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.TreeSet;
 
 class ClassContainers extends ArrayList<ClassContainer> {
-    private boolean acceptInnerClasses;
+    private boolean acceptInnerClasses = true;
 
     /**
      * Determines whether inner classes should be collected.
