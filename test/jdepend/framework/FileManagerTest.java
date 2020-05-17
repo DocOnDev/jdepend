@@ -26,27 +26,49 @@ public class FileManagerTest extends JDependTestCase {
         super.tearDown();
     }
 
-    public void testEmptyFileManager() {
+    public void testExtractFiles_EmptyFileManager_ZeroSize() {
         assertEquals(0, fileManager.extractFiles().size());
     }
 
-    public void testBuildDirectory() throws IOException {
+    public void testAddDirectory_BuildDirectory_44Files() throws IOException {
         fileManager.addDirectory(getBuildDir());
         assertEquals(44, fileManager.extractFiles().size());
     }
 
-    public void testNonExistentDirectory() {
-
+    public void testAddDirectory_NonExistentDirectory_IOError() {
         String file = getBuildDir() + "junk";
         String errorReason = "Non-existent directory:";
         assertIOError(file, errorReason);
     }
 
-    public void testInvalidDirectory() {
-
+    public void testAddDirectory_InvalidDirectory_IOError() {
         String file = getTestDir() + getPackageSubDir() + "ExampleTest.java";
         String errorReason = "Invalid directory:";
         assertIOError(file, errorReason);
+    }
+
+    public void testIsValidContainer_JarFile_True() {
+        assertTrue(fileManager.isValidContainer(new File(getTestDataDir()+ "test.jar")));
+    }
+
+    public void testIsValidContainer_ZipFile_True() {
+        assertTrue(fileManager.isValidContainer(new File(getTestDataDir() + "test.zip")));
+    }
+
+    public void testIsValidContainer_BinFile_False() {
+        assertFalse(fileManager.isValidContainer(new File(getTestDataDir() + "example_class1.bin")));
+    }
+
+    public void testAcceptClassFile_ValidClassFile_True() throws IOException {
+        assertTrue(fileManager.acceptClassFile(new File(getBuildDir() + getPackageSubDir() + "JDepend.class")));
+    }
+
+    public void testAcceptClassFile_NonExistentClassFile_False() {
+        assertFalse(fileManager.acceptClassFile(new File(getBuildDir() + "JDepend.class")));
+    }
+
+    public void testAcceptClassFile_InvalidClassFile_False() {
+        assertFalse(fileManager.acceptClassFile(new File(getHomeDir() + "build.xml")));
     }
 
     private void assertIOError(String fileName, String errorReason) {
@@ -58,53 +80,4 @@ public class FileManagerTest extends JDependTestCase {
         }
     }
 
-    public void testIsValidContainerAcceptsJarFile() {
-        assertTrue(fileManager.isValidContainer(new File(getTestDataDir()+ "test.jar")));
-    }
-
-    public void testIsValidContainerAcceptsZipFile() {
-        assertTrue(fileManager.isValidContainer(new File(getTestDataDir() + "test.zip")));
-    }
-
-    public void testIsValidContainerDoesNotAcceptBinFile() {
-        assertFalse(fileManager.isValidContainer(new File(getTestDataDir() + "example_class1.bin")));
-    }
-
-    public void testClassFile() throws IOException {
-
-        File f = new File(getBuildDir() + getPackageSubDir() + "JDepend.class");
-
-        assertEquals(true, new FileManager().acceptClassFile(f));
-    }
-
-    public void testNonExistentClassFile() {
-        File f = new File(getBuildDir() + "JDepend.class");
-        assertEquals(false, new FileManager().acceptClassFile(f));
-    }
-
-    public void testInvalidClassFile() {
-        File f = new File(getHomeDir() + "build.xml");
-        assertEquals(false, new FileManager().acceptClassFile(f));
-    }
-
-    public void testJar() throws IOException {
-        File f = File.createTempFile("bogus", ".jar", 
-            new File(getTestDataDir()));
-        fileManager.addDirectory(f.getPath());
-        f.deleteOnExit();
-    }
-
-    public void testZip() throws IOException {
-        File f = File.createTempFile("bogus", ".zip", 
-            new File(getTestDataDir()));
-        fileManager.addDirectory(f.getPath());
-        f.deleteOnExit();
-    }
-
-    public void testWar() throws IOException {
-        File f = File.createTempFile("bogus", ".war", 
-            new File(getTestDataDir()));
-        fileManager.addDirectory(f.getPath());
-        f.deleteOnExit();
-    }
 }
