@@ -3,24 +3,21 @@ package jdepend.framework;
 import java.io.File;
 import java.io.IOException;
 
-public class ClassContainer extends ClassContainerBase {
+abstract class ClassContainer {
+    protected final File location;
 
-    public ClassContainer(String source) throws IOException {
-        super(source);
+    ClassContainer(String source) throws IOException {
+        location = new File(source);
+        if (isNotAFile() || isNotAContainer()) {
+            throw new IOException("Invalid directory or Container file: " + source);
+        }
     }
 
-    @Override
-    protected boolean isNotAContainer() {
-        return !location.isDirectory() && !isContainerFile();
+    protected boolean isNotAFile() {
+        return !location.exists();
     }
 
-    private boolean isContainerFile() {
-        return hasExtension("war") || hasExtension("jar") || hasExtension("zip");
-    }
-
-    private boolean hasExtension(String ext) {
-        return location.getName().endsWith(ext);
-    }
+    protected abstract boolean isNotAContainer();
 
     public File getFile() {
         return location;

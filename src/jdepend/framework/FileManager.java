@@ -33,8 +33,7 @@ public class FileManager {
     }
 
     public void addDirectory(String fileName) throws IOException {
-        ClassContainer classContainer = new ClassContainer(fileName);
-        classContainers.add(classContainer);
+        classContainers.add(ClassContainerFactory.getContainer(fileName));
     }
 
     public boolean acceptClassFile(File file) {

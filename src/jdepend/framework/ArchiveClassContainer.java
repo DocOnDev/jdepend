@@ -2,7 +2,7 @@ package jdepend.framework;
 
 import java.io.IOException;
 
-public class ArchiveClassContainer extends ClassContainerBase {
+public class ArchiveClassContainer extends ClassContainer {
     public ArchiveClassContainer(String source) throws IOException {
         super(source);
     }
@@ -15,7 +15,7 @@ public class ArchiveClassContainer extends ClassContainerBase {
     }
 
     private boolean hasExtension(String ext) {
-        return location.getName().endsWith(ext);
+        return getFile().getName().endsWith(ext);
     }
 
 }
