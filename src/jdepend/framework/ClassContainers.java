@@ -1,6 +1,9 @@
 package jdepend.framework;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.TreeSet;
 
 class ClassContainers extends ArrayList<ClassContainer> {
     private boolean acceptInnerClasses;
@@ -21,5 +24,16 @@ class ClassContainers extends ArrayList<ClassContainer> {
 
     public boolean acceptClassFileName(String name) {
         return ClassContainer.acceptClassFileName(name, acceptInnerClasses());
+    }
+
+    Collection<File> extractFiles() {
+
+        Collection files = new TreeSet();
+
+        for (ClassContainer container : this) {
+            files.addAll(container.collectFiles(acceptInnerClasses()));
+        }
+
+        return files;
     }
 }

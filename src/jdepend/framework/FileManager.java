@@ -2,10 +2,7 @@ package jdepend.framework;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * The <code>FileManager</code> class is responsible for extracting
@@ -38,40 +35,7 @@ public class FileManager {
     }
 
     public Collection<File> extractFiles() {
-        return extractFiles(classContainers);
-    }
-
-    private Collection<File> extractFiles(ClassContainers classContainers) {
-
-        Collection files = new TreeSet();
-
-        for (ClassContainer container : classContainers) {
-            files.addAll(collectFiles(container));
-        }
-
-        return files;
-    }
-
-    private Collection collectFiles(ClassContainer container) {
-        if (container instanceof ArchiveClassContainer) {
-            return container.collectFiles();
-        }
-        File directory = container.getFile();
-
-        Collection<File> files = new ArrayList<>();
-
-        for (String fileName : directory.list()) {
-            File file = new File(directory, fileName);
-            try {
-                ClassContainer subContainer = ClassContainerFactory.getContainer(file.getPath());
-                files.addAll(collectFiles(subContainer));
-            } catch (IOException e) {
-                if (classContainers.acceptClassFileName(file.getName())) {
-                    files.add(file);
-                }
-            }
-        }
-        return files.stream().distinct().collect(Collectors.toList());
+        return classContainers.extractFiles();
     }
 
     private boolean isWar(File file) {

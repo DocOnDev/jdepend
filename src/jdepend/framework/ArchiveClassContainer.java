@@ -15,7 +15,7 @@ public class ArchiveClassContainer extends ClassContainer {
     protected boolean isNotAContainer() { return !isContainerFile(); }
 
     @Override
-    protected Collection<File> collectFiles() {
+    protected Collection<File> collectFiles(Boolean acceptInnerClasses) {
         return new ArrayList(Arrays.asList(getFile()));
     }
 

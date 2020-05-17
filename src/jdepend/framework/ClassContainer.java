@@ -29,6 +29,6 @@ abstract class ClassContainer {
         return location;
     }
 
-    protected abstract Collection<File> collectFiles();
+    protected abstract Collection<File> collectFiles(Boolean acceptInnerClasses);
 
 }
