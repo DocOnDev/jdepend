@@ -1,18 +1,14 @@
 package jdepend.framework;
 
-import java.io.File;
 import java.io.IOException;
 
-public class ClassContainer extends ClassContainerBase {
-
-    public ClassContainer(String source) throws IOException {
+public class ArchiveClassContainer extends ClassContainerBase {
+    public ArchiveClassContainer(String source) throws IOException {
         super(source);
     }
 
     @Override
-    protected boolean isNotAContainer() {
-        return !location.isDirectory() && !isContainerFile();
-    }
+    protected boolean isNotAContainer() { return !isContainerFile(); }
 
     private boolean isContainerFile() {
         return hasExtension("war") || hasExtension("jar") || hasExtension("zip");
@@ -22,7 +18,4 @@ public class ClassContainer extends ClassContainerBase {
         return location.getName().endsWith(ext);
     }
 
-    public File getFile() {
-        return location;
-    }
 }
