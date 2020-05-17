@@ -81,11 +81,11 @@ public class ConstraintTest extends JDependTestCase {
         JavaPackage text = constraint.addPackage("jdepend.textui");
         JavaPackage xml = constraint.addPackage("jdepend.xmlui");
         JavaPackage swing = constraint.addPackage("jdepend.swingui");
-        JavaPackage orgjunitrunners = constraint.addPackage("orgjunitrunners");
-        JavaPackage jdependframeworkp2 = constraint.addPackage("jdependframeworkp2");
-        JavaPackage jdependframeworkp3 = constraint.addPackage("jdependframeworkp3");
-        JavaPackage jdependframeworkp1 = constraint.addPackage("jdependframeworkp1");
-        JavaPackage orgjunit = constraint.addPackage("orgjunit");
+        JavaPackage orgjunitrunners = constraint.addPackage("org.junit.runners");
+        JavaPackage jdependframeworkp2 = constraint.addPackage("jdepend.framework.p2");
+        JavaPackage jdependframeworkp3 = constraint.addPackage("jdepend.framework.p3");
+        JavaPackage jdependframeworkp1 = constraint.addPackage("jdepend.framework.p1");
+        JavaPackage orgjunit = constraint.addPackage("org.junit");
 
         framework.dependsUpon(junitframework);
         framework.dependsUpon(junitui);
@@ -100,6 +100,8 @@ public class ConstraintTest extends JDependTestCase {
         framework.dependsUpon(orgjunitrunners);
         framework.dependsUpon(orgjunit);
 
-        assertEquals(true, jdepend.dependencyMatch(constraint));
+        boolean isMatching = jdepend.dependencyMatch(constraint);
+        assertEquals(true, isMatching);
+
     }
 }

@@ -14,7 +14,7 @@ import java.util.*;
 
 public class FileManager {
 
-    private ArrayList directories;
+    private ArrayList<File> directories;
     private boolean acceptInnerClasses;
 
 
@@ -37,15 +37,19 @@ public class FileManager {
 
         File directory = new File(name);
 
-        if (directory.isDirectory() || acceptJarFile(directory)) {
+        if (isDirectoryOrContainer(directory)) {
             directories.add(directory);
         } else {
-            throw new IOException("Invalid directory or JAR file: " + name);
+            throw new IOException("Invalid directory or Container file: " + name);
         }
     }
 
+    private boolean isDirectoryOrContainer(File directory) {
+        return directory.isDirectory() || isValidContainer(directory);
+    }
+
     public boolean acceptFile(File file) {
-        return acceptClassFile(file) || acceptJarFile(file);
+        return acceptClassFile(file) || isValidContainer(file);
     }
 
     public boolean acceptClassFile(File file) {
@@ -70,16 +74,15 @@ public class FileManager {
         return true;
     }
 
-    public boolean acceptJarFile(File file) {
+    public boolean isValidContainer(File file) {
         return isJar(file) || isZip(file) || isWar(file);
     }
 
-    public Collection extractFiles() {
+    public Collection<File> extractFiles() {
 
         Collection files = new TreeSet();
 
-        for (Iterator i = directories.iterator(); i.hasNext();) {
-            File directory = (File)i.next();
+        for (File directory : directories ) {
             collectFiles(directory, files);
         }
 

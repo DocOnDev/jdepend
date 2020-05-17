@@ -54,14 +54,9 @@ public class JavaClassBuilder {
 
         Collection classes = new ArrayList();
 
-        for (Iterator i = fileManager.extractFiles().iterator(); i.hasNext();) {
-
-            File nextFile = (File)i.next();
-
+        for (File file : fileManager.extractFiles()) {
             try {
-
-                classes.addAll(buildClasses(nextFile));
-
+                classes.addAll(buildClasses(file));
             } catch (IOException ioe) {
                 System.err.println("\n" + ioe.getMessage());
             }
@@ -92,7 +87,7 @@ public class JavaClassBuilder {
                     is.close();
                 }
             }
-        } else if (fileManager.acceptJarFile(file)) {
+        } else if (fileManager.isValidContainer(file)) {
 
             JarFile jarFile = new JarFile(file);
             Collection result = buildClasses(jarFile);

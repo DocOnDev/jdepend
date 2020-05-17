@@ -3,6 +3,7 @@ package jdepend.framework;
 import java.io.*;
 
 import junit.framework.*;
+import org.junit.Ignore;
 
 /**
  * @author <b>Mike Clark</b>
@@ -25,12 +26,14 @@ public class JDependTestCase extends TestCase {
 
     protected void setUp() {
 
-        homeDir = System.getProperty("jdepend.home");
-        if (homeDir == null) {
-            fail("Property 'jdepend.home' not defined");
-        }
-        homeDir = homeDir + File.separator;
-        testDir = homeDir + File.separator + "test" + File.separator;
+//        homeDir = System.getProperty("jdepend.home");
+//        if (homeDir == null) {
+//            fail("Property 'jdepend.home' not defined");
+//        }
+//        homeDir = homeDir + File.separator;
+        // Let's not worry about a property for now.
+        homeDir = "./";
+        testDir = homeDir + "test" + File.separator;
         testDataDir = testDir + "data" + File.separator;
         buildDir = homeDir + "build" + File.separator;
         packageSubDir = "jdepend" + File.separator + 
@@ -60,5 +63,11 @@ public class JDependTestCase extends TestCase {
     
     public String getPackageSubDir() {
         return packageSubDir;
+    }
+
+    // Added to resolve a junit error
+    @Ignore
+    public void testFake() {
+        assertTrue(true);
     }
 }
