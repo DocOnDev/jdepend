@@ -12,7 +12,9 @@ public class ArchiveClassContainer extends ClassContainer {
     }
 
     @Override
-    protected boolean isNotAContainer() { return !isContainerFile(); }
+    protected boolean isNotAContainer() {
+        return !isContainerFile();
+    }
 
     @Override
     protected Collection<File> collectFiles(Boolean acceptInnerClasses) {

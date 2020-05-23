@@ -1,24 +1,25 @@
 package jdepend.framework;
 
 import java.io.*;
-import java.util.*;
-import java.util.jar.*;
-import java.util.zip.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 /**
- * The <code>JavaClassBuilder</code> builds <code>JavaClass</code> 
+ * The <code>JavaClassBuilder</code> builds <code>JavaClass</code>
  * instances from .class, .jar, .war, or .zip files.
- * 
+ *
  * @author <b>Mike Clark</b>
  * @author Clarkware Consulting, Inc.
  */
 
 public class JavaClassBuilder {
 
-    private AbstractParser parser;
-    private ClassContainers classContainers;
+    private final AbstractParser parser;
+    private final ClassContainers classContainers;
 
-    
     public JavaClassBuilder() {
         this(new ClassFileParser(), new ClassContainers());
     }
@@ -47,7 +48,7 @@ public class JavaClassBuilder {
 
     /**
      * Builds the <code>JavaClass</code> instances.
-     * 
+     *
      * @return Collection of <code>JavaClass</code> instances.
      */
     public Collection build() {
@@ -66,9 +67,9 @@ public class JavaClassBuilder {
     }
 
     /**
-     * Builds the <code>JavaClass</code> instances from the 
+     * Builds the <code>JavaClass</code> instances from the
      * specified file.
-     * 
+     *
      * @param file Class or Jar file.
      * @return Collection of <code>JavaClass</code> instances.
      */
@@ -95,16 +96,16 @@ public class JavaClassBuilder {
             return result;
 
         } else {
-            throw new IOException("File is not a valid " + 
-                ".class, .jar, .war, or .zip file: " + 
-                file.getPath());
+            throw new IOException("File is not a valid " +
+                    ".class, .jar, .war, or .zip file: " +
+                    file.getPath());
         }
     }
 
     /**
-     * Builds the <code>JavaClass</code> instances from the specified 
+     * Builds the <code>JavaClass</code> instances from the specified
      * jar, war, or zip file.
-     * 
+     *
      * @param file Jar, war, or zip file.
      * @return Collection of <code>JavaClass</code> instances.
      */
@@ -118,7 +119,7 @@ public class JavaClassBuilder {
             if (classContainers.acceptClassFileName(e.getName())) {
                 InputStream is = null;
                 try {
-	                is = new BufferedInputStream(file.getInputStream(e));
+                    is = new BufferedInputStream(file.getInputStream(e));
                     JavaClass jc = parser.parse(is);
                     javaClasses.add(jc);
                 } finally {

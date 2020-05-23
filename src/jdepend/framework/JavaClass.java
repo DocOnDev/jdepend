@@ -1,11 +1,13 @@
 package jdepend.framework;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /**
- * The <code>JavaClass</code> class represents a Java 
+ * The <code>JavaClass</code> class represents a Java
  * class or interface.
- * 
+ *
  * @author <b>Mike Clark</b>
  * @author Clarkware Consulting, Inc.
  */
@@ -15,7 +17,7 @@ public class JavaClass {
     private String className;
     private String packageName;
     private boolean isAbstract;
-    private HashMap imports;
+    private final HashMap imports;
     private String sourceFile;
 
 
@@ -27,28 +29,28 @@ public class JavaClass {
         sourceFile = "Unknown";
     }
 
-    public void setName(String name) {
-        className = name;
-    }
-
     public String getName() {
         return className;
     }
 
-    public void setPackageName(String name) {
-        packageName = name;
+    public void setName(String name) {
+        className = name;
     }
 
     public String getPackageName() {
         return packageName;
     }
 
-    public void setSourceFile(String name) {
-        sourceFile = name;
+    public void setPackageName(String name) {
+        packageName = name;
     }
 
     public String getSourceFile() {
         return sourceFile;
+    }
+
+    public void setSourceFile(String name) {
+        sourceFile = name;
     }
 
     public Collection getImportedPackages() {
