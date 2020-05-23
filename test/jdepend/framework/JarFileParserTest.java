@@ -72,10 +72,10 @@ public class JarFileParserTest extends JDependTestCase {
 
     public void testJarFileWithoutInnerClasses() throws IOException {
 
-        FileManager fm = new FileManager();
-        fm.classContainers.acceptInnerClasses(false);
+        ClassContainers containers = new ClassContainers();
+        containers.acceptInnerClasses(false);
 
-        JavaClassBuilder builder = new JavaClassBuilder(fm);
+        JavaClassBuilder builder = new JavaClassBuilder(containers);
 
         Collection classes = builder.buildClasses(jarFile);
         assertEquals(4, classes.size());
@@ -96,10 +96,10 @@ public class JarFileParserTest extends JDependTestCase {
 
     public void testZipFileWithoutInnerClasses() throws IOException {
 
-        FileManager fm = new FileManager();
-        fm.classContainers.acceptInnerClasses(false);
+        ClassContainers containers = new ClassContainers();
+        containers.acceptInnerClasses(false);
 
-        JavaClassBuilder builder = new JavaClassBuilder(fm);
+        JavaClassBuilder builder = new JavaClassBuilder(containers);
 
         Collection classes = builder.buildClasses(zipFile);
         assertEquals(4, classes.size());

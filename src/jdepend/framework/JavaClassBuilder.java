@@ -16,20 +16,20 @@ import java.util.zip.*;
 public class JavaClassBuilder {
 
     private AbstractParser parser;
-    private FileManager fileManager;
+    private ClassContainers classContainers;
 
     
     public JavaClassBuilder() {
-        this(new ClassFileParser(), new FileManager());
+        this(new ClassFileParser(), new ClassContainers());
     }
 
-    public JavaClassBuilder(FileManager fm) {
-        this(new ClassFileParser(), fm);
+    public JavaClassBuilder(ClassContainers containers) {
+        this(new ClassFileParser(), containers);
     }
 
-    public JavaClassBuilder(AbstractParser parser, FileManager fm) {
+    public JavaClassBuilder(AbstractParser parser, ClassContainers containers) {
         this.parser = parser;
-        this.fileManager = fm;
+        this.classContainers = containers;
     }
 
     public int countClasses() {
@@ -40,7 +40,7 @@ public class JavaClassBuilder {
             }
         };
 
-        JavaClassBuilder builder = new JavaClassBuilder(counter, fileManager);
+        JavaClassBuilder builder = new JavaClassBuilder(counter, classContainers);
         Collection classes = builder.build();
         return classes.size();
     }
@@ -54,7 +54,7 @@ public class JavaClassBuilder {
 
         Collection classes = new ArrayList();
 
-        for (File file : fileManager.extractFiles()) {
+        for (File file : classContainers.extractFiles()) {
             try {
                 classes.addAll(buildClasses(file));
             } catch (IOException ioe) {
@@ -74,7 +74,7 @@ public class JavaClassBuilder {
      */
     public Collection buildClasses(File file) throws IOException {
 
-        if (fileManager.acceptClassFile(file)) {
+        if (file.isFile() && classContainers.acceptClassFileName(file.getName())) {
             InputStream is = null;
             try {
                 is = new BufferedInputStream(new FileInputStream(file));
@@ -87,7 +87,7 @@ public class JavaClassBuilder {
                     is.close();
                 }
             }
-        } else if (fileManager.isValidContainer(file)) {
+        } else if (classContainers.isValidContainer(file)) {
 
             JarFile jarFile = new JarFile(file);
             Collection result = buildClasses(jarFile);
@@ -115,7 +115,7 @@ public class JavaClassBuilder {
         Enumeration entries = file.entries();
         while (entries.hasMoreElements()) {
             ZipEntry e = (ZipEntry) entries.nextElement();
-            if (fileManager.acceptClassFileName(e.getName())) {
+            if (classContainers.acceptClassFileName(e.getName())) {
                 InputStream is = null;
                 try {
 	                is = new BufferedInputStream(file.getInputStream(e));

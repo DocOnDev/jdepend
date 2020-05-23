@@ -2,8 +2,7 @@ package jdepend.framework;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 
 abstract class ClassContainer {
     protected final File location;
@@ -13,6 +12,11 @@ abstract class ClassContainer {
         if (isNotAFile() || isNotAContainer()) {
             throw new IOException("Invalid directory or Container file: " + source);
         }
+    }
+
+    public static boolean acceptClassFileName(String name, boolean acceptInnerClasses) {
+        if (!acceptInnerClasses && (name.toLowerCase().indexOf("$") > 0)) return false;
+        return name.toLowerCase().endsWith(".class");
     }
 
     protected boolean isNotAFile() {
@@ -25,7 +29,6 @@ abstract class ClassContainer {
         return location;
     }
 
-    ArrayList collectFiles() {
-        return new ArrayList(Arrays.asList(getFile()));
-    }
+    protected abstract Collection<File> collectFiles(Boolean acceptInnerClasses);
+
 }
