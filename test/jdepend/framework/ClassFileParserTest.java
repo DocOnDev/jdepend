@@ -147,15 +147,17 @@ public class ClassFileParserTest extends JDependTestCase {
     private void validateParser(ClassFileCriteria classFileCriteria) throws IOException {
         File f = new File(getBuildDir() + getPackageSubDir() + classFileCriteria.getClassName() + ".class");
 
-        JavaClass clazz = parser.parse(f);
-        assertEquals(clazz.isAbstract(), classFileCriteria.isAbstract());
-        assertEquals("jdepend.framework." + classFileCriteria.getClassName(), clazz.getName());
-        assertEquals(classFileCriteria.getSourceFileName(), clazz.getSourceFile());
+        JavaClass javaClass = parser.parse(f);
+        assertEquals(javaClass.isAbstract(), classFileCriteria.isAbstract());
+        assertEquals("jdepend.framework." + classFileCriteria.getClassName(), javaClass.getName());
+        assertEquals(classFileCriteria.getSourceFileName(), javaClass.getSourceFile());
 
-        Collection imports = clazz.getImportedPackages();
-        assertEquals(classFileCriteria.getExpectedImports().size(), imports.size());
-        for (JavaPackage pkg : classFileCriteria.getExpectedImports()) {
-            assertTrue(imports.contains(pkg));
+        Collection importedPackages = javaClass.getImportedPackages();
+        Collection<JavaPackage> expectedPackages = classFileCriteria.getExpectedImports();
+
+        assertEquals(expectedPackages.size(), importedPackages.size());
+        for (JavaPackage javaPackage : expectedPackages) {
+            assertTrue(importedPackages.contains(javaPackage));
         }
     }
 
