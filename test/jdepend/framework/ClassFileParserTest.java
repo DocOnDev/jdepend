@@ -31,13 +31,14 @@ public class ClassFileParserTest extends JDependTestCase {
 
     public void testInvalidClassFile() {
 
-        File f = new File(getTestDir() + getPackageSubDir() + "ExampleTest.java");
+        String filePath = getTestDir() + getPackageSubDir() + "ExampleTest.java";
+        File f = new File(filePath);
 
         try {
             parser.parse(f);
             fail("Invalid class file: Should raise IOException");
         } catch (IOException expected) {
-            assertTrue(true);
+            assertEquals("Invalid class file: " + filePath, expected.getMessage());
         }
     }
 

@@ -100,7 +100,7 @@ public class ClassFileParser extends AbstractParser {
      */
     public JavaClass parse(File classFile) throws IOException {
 
-        this.fileName = classFile.getCanonicalPath();
+        this.fileName = classFile.getPath();
 
         debug("\nParsing " + fileName + "...");
 
