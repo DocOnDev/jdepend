@@ -43,9 +43,6 @@ public class ClassFileParserTest extends JDependTestCase {
 
     public void testInterfaceClass() throws IOException {
 
-        String className = "ExampleInterface";
-        String sourceFileName = className + ".java";
-        boolean isAbstract = true;
         Collection<JavaPackage> expectedImports = new ArrayList(Arrays.asList(
                 new JavaPackage("java.math"),
                 new JavaPackage("java.text"),
@@ -55,14 +52,17 @@ public class ClassFileParserTest extends JDependTestCase {
                 new JavaPackage("java.util")
         ));
 
-        validateParser(className, sourceFileName, isAbstract, expectedImports);
+        ClassFileCriteria classFileCriteria = new ClassFileCriteria(
+                "ExampleInterface",
+                "ExampleInterface" + ".java",
+                true,
+                expectedImports);
+
+        validateParser(classFileCriteria);
     }
 
     public void testAbstractClass() throws IOException {
 
-        String className = "ExampleAbstractClass";
-        String sourceFileName = className + ".java";
-        boolean isAbstract = true;
         Collection<JavaPackage> expectedImports = new ArrayList(Arrays.asList(
                 new JavaPackage("java.math"),
                 new JavaPackage("java.text"),
@@ -73,15 +73,17 @@ public class ClassFileParserTest extends JDependTestCase {
                 new JavaPackage("java.util")
         ));
 
-        validateParser(className, sourceFileName, isAbstract, expectedImports);
+        ClassFileCriteria classFileCriteria = new ClassFileCriteria(
+                "ExampleAbstractClass",
+                "ExampleAbstractClass" + ".java",
+                true,
+                expectedImports);
 
+        validateParser(classFileCriteria);
     }
 
     public void testConcreteClass() throws IOException {
 
-        String className = "ExampleConcreteClass";
-        String sourceFileName = className + ".java";
-        boolean isAbstract = false;
         Collection<JavaPackage> expectedImports = new ArrayList(Arrays.asList(
                 new JavaPackage("java.net"),
                 new JavaPackage("java.text"),
@@ -106,45 +108,52 @@ public class ClassFileParserTest extends JDependTestCase {
                 new JavaPackage("java.awt.dnd.peer")
         ));
 
-        validateParser(className, sourceFileName, isAbstract, expectedImports);
+        ClassFileCriteria classFileCriteria = new ClassFileCriteria(
+                "ExampleConcreteClass",
+                "ExampleConcreteClass" + ".java",
+                false,
+                expectedImports);
+
+        validateParser(classFileCriteria);
     }
 
     public void testInnerClass() throws IOException {
 
-        String className = "ExampleConcreteClass$ExampleInnerClass";
-        String sourceFileName = "ExampleConcreteClass.java";
-        boolean isAbstract = false;
-        Collection<JavaPackage> expectedImports = new ArrayList(Arrays.asList(
-                new JavaPackage("java.lang")
-        ));
+        ClassFileCriteria classFileCriteria = new ClassFileCriteria(
+                "ExampleConcreteClass$ExampleInnerClass",
+                "ExampleConcreteClass.java",
+                false,
+                new ArrayList(Arrays.asList(
+                        new JavaPackage("java.lang")
+                )));
 
-        validateParser(className, sourceFileName, isAbstract, expectedImports);
-
+        validateParser(classFileCriteria);
     }
 
     public void testPackageClass() throws IOException {
-        String className = "ExamplePackageClass";
-        String sourceFileName = "ExampleConcreteClass.java";
-        boolean isAbstract = false;
-        Collection<JavaPackage> expectedImports = new ArrayList(Arrays.asList(
-                new JavaPackage("java.lang")
-        ));
 
-        validateParser(className, sourceFileName, isAbstract, expectedImports);
+        ClassFileCriteria classFileCriteria = new ClassFileCriteria(
+                "ExamplePackageClass",
+                "ExampleConcreteClass.java",
+                false,
+                new ArrayList(Arrays.asList(
+                        new JavaPackage("java.lang")
+                )));
 
+        validateParser(classFileCriteria);
     }
 
-    private void validateParser(String className, String sourceFileName, boolean isAbstract, Collection<JavaPackage> expectedImports) throws IOException {
-        File f = new File(getBuildDir() + getPackageSubDir() + className + ".class");
+    private void validateParser(ClassFileCriteria classFileCriteria) throws IOException {
+        File f = new File(getBuildDir() + getPackageSubDir() + classFileCriteria.getClassName() + ".class");
 
         JavaClass clazz = parser.parse(f);
-        assertEquals(clazz.isAbstract(), isAbstract);
-        assertEquals("jdepend.framework." + className, clazz.getName());
-        assertEquals(sourceFileName, clazz.getSourceFile());
+        assertEquals(clazz.isAbstract(), classFileCriteria.isAbstract());
+        assertEquals("jdepend.framework." + classFileCriteria.getClassName(), clazz.getName());
+        assertEquals(classFileCriteria.getSourceFileName(), clazz.getSourceFile());
 
         Collection imports = clazz.getImportedPackages();
-        assertEquals(expectedImports.size(), imports.size());
-        for (JavaPackage pkg : expectedImports) {
+        assertEquals(classFileCriteria.getExpectedImports().size(), imports.size());
+        for (JavaPackage pkg : classFileCriteria.getExpectedImports()) {
             assertTrue(imports.contains(pkg));
         }
     }
@@ -156,6 +165,36 @@ public class ClassFileParserTest extends JDependTestCase {
 
     public void testExampleClassFile2() throws IOException {
         parser.parse(ClassFileParser.class.getResourceAsStream("/data/example_class2.bin"));
+    }
+
+    private static class ClassFileCriteria {
+        private final String className;
+        private final String sourceFileName;
+        private final boolean isAbstract;
+        private final Collection<JavaPackage> expectedImports;
+
+        private ClassFileCriteria(String className, String sourceFileName, boolean isAbstract, Collection<JavaPackage> expectedImports) {
+            this.className = className;
+            this.sourceFileName = sourceFileName;
+            this.isAbstract = isAbstract;
+            this.expectedImports = expectedImports;
+        }
+
+        public String getClassName() {
+            return className;
+        }
+
+        public String getSourceFileName() {
+            return sourceFileName;
+        }
+
+        public boolean isAbstract() {
+            return isAbstract;
+        }
+
+        public Collection<JavaPackage> getExpectedImports() {
+            return expectedImports;
+        }
     }
 }
 
