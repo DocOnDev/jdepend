@@ -55,7 +55,7 @@ public class ClassFileParserTest extends JDependTestCase {
 
         ClassFileCriteria classFileCriteria = new ClassFileCriteria(
                 "ExampleInterface",
-                "ExampleInterface" + ".java",
+                "ExampleInterface.java",
                 true,
                 expectedImports);
 
@@ -76,7 +76,7 @@ public class ClassFileParserTest extends JDependTestCase {
 
         ClassFileCriteria classFileCriteria = new ClassFileCriteria(
                 "ExampleAbstractClass",
-                "ExampleAbstractClass" + ".java",
+                "ExampleAbstractClass.java",
                 true,
                 expectedImports);
 
@@ -111,7 +111,7 @@ public class ClassFileParserTest extends JDependTestCase {
 
         ClassFileCriteria classFileCriteria = new ClassFileCriteria(
                 "ExampleConcreteClass",
-                "ExampleConcreteClass" + ".java",
+                "ExampleConcreteClass.java",
                 false,
                 expectedImports);
 
