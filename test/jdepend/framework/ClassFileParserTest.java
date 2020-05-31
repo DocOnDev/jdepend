@@ -200,4 +200,3 @@ public class ClassFileParserTest extends JDependTestCase {
         }
     }
 }
-
