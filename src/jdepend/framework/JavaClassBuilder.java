@@ -92,41 +92,25 @@ public class JavaClassBuilder {
                 }
             }
         } else if (classContainers.isValidContainer(file)) {
-
             JarFile jarFile = new JarFile(file);
-            result = buildClasses(jarFile);
-            jarFile.close();
 
-        } 
+            Enumeration entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry e = (ZipEntry) entries.nextElement();
+                if (classContainers.acceptClassFileName(e.getName())) {
+                    InputStream is = null;
+                    try {
+                        is = new BufferedInputStream(jarFile.getInputStream(e));
+                        JavaClass jc = parser.parse(is);
+                        result.add(jc);
+                    } finally {
+                        is.close();
+                    }
+                }
+            }
+            jarFile.close();
+        }
         return result;
     }
 
-    /**
-     * Builds the <code>JavaClass</code> instances from the specified
-     * jar, war, or zip file.
-     *
-     * @param file Jar, war, or zip file.
-     * @return Collection of <code>JavaClass</code> instances.
-     */
-    public Collection buildClasses(JarFile file) throws IOException {
-
-        Collection javaClasses = new ArrayList();
-
-        Enumeration entries = file.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry e = (ZipEntry) entries.nextElement();
-            if (classContainers.acceptClassFileName(e.getName())) {
-                InputStream is = null;
-                try {
-                    is = new BufferedInputStream(file.getInputStream(e));
-                    JavaClass jc = parser.parse(is);
-                    javaClasses.add(jc);
-                } finally {
-                    is.close();
-                }
-            }
-        }
-
-        return javaClasses;
-    }
 }
