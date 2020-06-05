@@ -147,8 +147,12 @@ public class JavaClassBuilder {
         }
 
         public BufferedInputStream invoke() throws IOException {
-            if (this.jarFile != null && this.entry != null) return new BufferedInputStream(jarFile.getInputStream(entry));
+            if (isZipSource()) return new BufferedInputStream(jarFile.getInputStream(entry));
             return new BufferedInputStream(new FileInputStream(file));
+        }
+
+        private boolean isZipSource() {
+            return this.jarFile != null && this.entry != null;
         }
     }
 }
