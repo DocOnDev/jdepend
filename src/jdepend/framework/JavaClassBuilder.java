@@ -75,6 +75,10 @@ public class JavaClassBuilder {
      */
     public Collection buildClasses(File file) throws IOException {
 
+        if (!classContainers.isAcceptableClassFile(file) && !classContainers.isValidContainer(file)) {
+            throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
+        }
+
         if (classContainers.isAcceptableClassFile(file)) {
             InputStream is = null;
             try {
