@@ -75,7 +75,7 @@ public class JavaClassBuilder {
      */
     public Collection buildClasses(File file) throws IOException {
 
-        if (file.isFile() && classContainers.acceptClassFileName(file.getName())) {
+        if (classContainers.isAcceptableClassFile(file)) {
             InputStream is = null;
             try {
                 is = new BufferedInputStream(new FileInputStream(file));
