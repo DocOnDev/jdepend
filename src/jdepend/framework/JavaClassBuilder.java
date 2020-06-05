@@ -82,62 +82,46 @@ public class JavaClassBuilder {
 
         Collection result = new ArrayList();
         if (classContainers.isAcceptableClassFile(file)) {
-            result.addAll(parseStreamFromFile(file));
+            result.addAll(parseFromSource(new StreamSource(file)));
         } else if (classContainers.isValidContainer(file)) {
             JarFile jarFile = new JarFile(file);
             for (ZipEntry entry : getJarFileEntries(jarFile)) {
-                result.addAll(parseStreamFromJar(jarFile, entry));
+                result.addAll(parseFromSource(new StreamSource(jarFile, entry)));
             }
             jarFile.close();
         }
         return result;
     }
 
+    private Collection parseFromSource(StreamSource streamSource) throws IOException {
+        InputStream is = null;
+        Collection parsedResult = new ArrayList();
+        try {
+            is = streamSource.invoke();
+            parsedResult.add(parser.parse(is));
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return parsedResult;
+    }
+
     private List<ZipEntry> getJarFileEntries(JarFile jarFile) {
         return jarFile.stream()
-                .filter(entry-> classContainers.acceptClassFileName(entry.getName()))
+                .filter(entry -> classContainers.acceptClassFileName(entry.getName()))
                 .collect(Collectors.toList());
-    }
-
-    private Collection parseStreamFromJar(JarFile jarFile, ZipEntry entry) throws IOException {
-        InputStream is = null;
-        Collection parsedResult = new ArrayList();
-        try {
-            is = new StreamSource(jarFile, entry).invoke();
-            JavaClass parsedClass = parser.parse(is);
-            parsedResult.add(parsedClass);
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        return parsedResult;
-    }
-
-    private Collection parseStreamFromFile(File file) throws IOException {
-        InputStream is = null;
-        Collection parsedResult = new ArrayList();
-        try {
-            is = new StreamSource(file).invoke();
-            JavaClass parsedClass = parser.parse(is);
-            parsedResult.add(parsedClass);
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        return parsedResult;
     }
 
     private class StreamSource {
         private final JarFile jarFile;
         private final ZipEntry entry;
-        private File file;
+        private final File file;
 
         public StreamSource(File file) {
             this.file = file;
-            jarFile = null;
-            entry = null;
+            this.jarFile = null;
+            this.entry = null;
         }
 
         public StreamSource(JarFile jarFile, ZipEntry entry) {
