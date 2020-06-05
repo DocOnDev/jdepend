@@ -3,8 +3,9 @@ package jdepend.framework;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 /**
@@ -81,36 +82,51 @@ public class JavaClassBuilder {
 
         Collection result = new ArrayList();
         if (classContainers.isAcceptableClassFile(file)) {
-            InputStream is = null;
-            try {
-                is = new BufferedInputStream(new FileInputStream(file));
-                JavaClass parsedClass = parser.parse(is);
-                result.add(parsedClass);
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
-            }
+            result.addAll(parseStreamFromFile(file));
         } else if (classContainers.isValidContainer(file)) {
             JarFile jarFile = new JarFile(file);
-
-            Enumeration entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry e = (ZipEntry) entries.nextElement();
-                if (classContainers.acceptClassFileName(e.getName())) {
-                    InputStream is = null;
-                    try {
-                        is = new BufferedInputStream(jarFile.getInputStream(e));
-                        JavaClass jc = parser.parse(is);
-                        result.add(jc);
-                    } finally {
-                        is.close();
-                    }
-                }
+            for (ZipEntry entry : getJarFileEntries(jarFile)) {
+                result.addAll(parseStreamFromJar(jarFile, entry));
             }
             jarFile.close();
         }
         return result;
+    }
+
+    private List<ZipEntry> getJarFileEntries(JarFile jarFile) {
+        return jarFile.stream()
+                .filter(entry-> classContainers.acceptClassFileName(entry.getName()))
+                .collect(Collectors.toList());
+    }
+
+    private Collection parseStreamFromJar(JarFile jarFile, ZipEntry e) throws IOException {
+        InputStream is = null;
+        Collection parsedResult = new ArrayList();
+        try {
+            is = new BufferedInputStream(jarFile.getInputStream(e));
+            JavaClass parsedClass = parser.parse(is);
+            parsedResult.add(parsedClass);
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return parsedResult;
+    }
+
+    private Collection parseStreamFromFile(File file) throws IOException {
+        InputStream is = null;
+        Collection parsedResult = new ArrayList();
+        try {
+            is = new BufferedInputStream(new FileInputStream(file));
+            JavaClass parsedClass = parser.parse(is);
+            parsedResult.add(parsedClass);
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return parsedResult;
     }
 
 }
