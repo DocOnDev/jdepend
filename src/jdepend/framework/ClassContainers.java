@@ -57,4 +57,12 @@ class ClassContainers extends ArrayList<ClassContainer> {
     public boolean isValidContainer(File file) {
         return isJar(file) || isZip(file) || isWar(file);
     }
+
+    boolean isClassFile(File file) {
+        return file.isFile() && acceptClassFileName(file.getName());
+    }
+
+    boolean isNotClassOrContainer(File file) {
+        return !isClassFile(file) && !isValidContainer(file);
+    }
 }
