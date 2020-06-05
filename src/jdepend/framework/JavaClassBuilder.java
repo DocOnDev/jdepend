@@ -99,11 +99,11 @@ public class JavaClassBuilder {
                 .collect(Collectors.toList());
     }
 
-    private Collection parseStreamFromJar(JarFile jarFile, ZipEntry e) throws IOException {
+    private Collection parseStreamFromJar(JarFile jarFile, ZipEntry entry) throws IOException {
         InputStream is = null;
         Collection parsedResult = new ArrayList();
         try {
-            is = new BufferedInputStream(jarFile.getInputStream(e));
+            is = new StreamSource(jarFile, entry).invoke();
             JavaClass parsedClass = parser.parse(is);
             parsedResult.add(parsedClass);
         } finally {
@@ -118,7 +118,7 @@ public class JavaClassBuilder {
         InputStream is = null;
         Collection parsedResult = new ArrayList();
         try {
-            is = new BufferedInputStream(new FileInputStream(file));
+            is = new StreamSource(file).invoke();
             JavaClass parsedClass = parser.parse(is);
             parsedResult.add(parsedClass);
         } finally {
@@ -129,4 +129,26 @@ public class JavaClassBuilder {
         return parsedResult;
     }
 
+    private class StreamSource {
+        private final JarFile jarFile;
+        private final ZipEntry entry;
+        private File file;
+
+        public StreamSource(File file) {
+            this.file = file;
+            jarFile = null;
+            entry = null;
+        }
+
+        public StreamSource(JarFile jarFile, ZipEntry entry) {
+            this.jarFile = jarFile;
+            this.entry = entry;
+            this.file = null;
+        }
+
+        public BufferedInputStream invoke() throws IOException {
+            if (this.jarFile != null && this.entry != null) return new BufferedInputStream(jarFile.getInputStream(entry));
+            return new BufferedInputStream(new FileInputStream(file));
+        }
+    }
 }
