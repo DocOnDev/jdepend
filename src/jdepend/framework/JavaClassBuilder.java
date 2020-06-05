@@ -79,14 +79,13 @@ public class JavaClassBuilder {
             throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
         }
 
+        Collection result = new ArrayList();
         if (classContainers.isAcceptableClassFile(file)) {
             InputStream is = null;
             try {
                 is = new BufferedInputStream(new FileInputStream(file));
                 JavaClass parsedClass = parser.parse(is);
-                Collection javaClasses = new ArrayList();
-                javaClasses.add(parsedClass);
-                return javaClasses;
+                result.add(parsedClass);
             } finally {
                 if (is != null) {
                     is.close();
@@ -95,15 +94,11 @@ public class JavaClassBuilder {
         } else if (classContainers.isValidContainer(file)) {
 
             JarFile jarFile = new JarFile(file);
-            Collection result = buildClasses(jarFile);
+            result = buildClasses(jarFile);
             jarFile.close();
-            return result;
 
-        } else {
-            throw new IOException("File is not a valid " +
-                    ".class, .jar, .war, or .zip file: " +
-                    file.getPath());
-        }
+        } 
+        return result;
     }
 
     /**
