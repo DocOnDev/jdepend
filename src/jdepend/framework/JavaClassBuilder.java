@@ -73,7 +73,10 @@ public class JavaClassBuilder {
      * @return Collection of <code>JavaClass</code> instances.
      */
     public Collection buildClasses(File file) throws IOException {
+        return buildClasses(parser, file);
+    }
 
+    public Collection buildClasses(AbstractParser parser, File file) throws IOException {
         if (!classContainers.isAcceptableClassFile(file) && !classContainers.isValidContainer(file)) {
             throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
         }
