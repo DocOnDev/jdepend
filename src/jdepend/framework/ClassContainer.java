@@ -2,6 +2,8 @@ package jdepend.framework;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 
 abstract class ClassContainer {
@@ -31,5 +33,21 @@ abstract class ClassContainer {
 
     protected abstract Collection<File> collectFiles(Boolean acceptInnerClasses);
 
-    public abstract Collection<JavaClass> buildClasses(Boolean acceptInnerClasses, AbstractParser parser);
+    public abstract Collection<JavaClass> buildClasses(Boolean acceptInnerClasses, AbstractParser parser) throws IOException;
+
+    Collection<JavaClass> parseFromSource(AbstractParser parser, StreamSource streamSource) throws IOException {
+        InputStream is = null;
+        Collection<JavaClass> parsedResult = new ArrayList();
+        try {
+            is = streamSource.invoke();
+            parsedResult.add(parser.parse(is));
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return parsedResult;
+    }
+
+
 }
