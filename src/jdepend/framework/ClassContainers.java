@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.TreeSet;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
 
 class ClassContainers extends ArrayList<ClassContainer> {
     private boolean acceptInnerClasses = true;
@@ -76,5 +80,11 @@ class ClassContainers extends ArrayList<ClassContainer> {
             }
         }
         return parsedResult;
+    }
+
+    List<ZipEntry> getJarFileEntries(JarFile jarFile, JavaClassBuilder javaClassBuilder) {
+        return jarFile.stream()
+                .filter(entry -> acceptClassFileName(entry.getName()))
+                .collect(Collectors.toList());
     }
 }

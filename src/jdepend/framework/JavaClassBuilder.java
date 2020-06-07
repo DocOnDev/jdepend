@@ -3,9 +3,7 @@ package jdepend.framework;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 /**
@@ -85,18 +83,12 @@ public class JavaClassBuilder {
             result.addAll(classContainers.parseFromSource(parser, new StreamSource(file)));
         } else if (classContainers.isValidContainer(file)) {
             JarFile jarFile = new JarFile(file);
-            for (ZipEntry entry : getJarFileEntries(jarFile)) {
+            for (ZipEntry entry : classContainers.getJarFileEntries(jarFile, this)) {
                 result.addAll(classContainers.parseFromSource(parser, new StreamSource(jarFile, entry)));
             }
             jarFile.close();
         }
         return result;
-    }
-
-    private List<ZipEntry> getJarFileEntries(JarFile jarFile) {
-        return jarFile.stream()
-                .filter(entry -> classContainers.acceptClassFileName(entry.getName()))
-                .collect(Collectors.toList());
     }
 
 }
