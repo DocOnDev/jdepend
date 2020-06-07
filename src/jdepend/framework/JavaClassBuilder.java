@@ -71,7 +71,7 @@ public class JavaClassBuilder {
      * @return Collection of <code>JavaClass</code> instances.
      */
     public Collection buildClasses(File file) throws IOException {
-        return classContainers.buildClasses(parser, file, this);
+        return classContainers.buildClasses(parser, file);
     }
 
 }
