@@ -48,7 +48,7 @@ public class JavaClassBuilder {
      * @return Collection of <code>JavaClass</code> instances.
      */
     public Collection build() {
-        return classContainers.build(parser, this);
+        return classContainers.build(parser);
     }
 
     /**

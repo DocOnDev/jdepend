@@ -106,7 +106,7 @@ class ClassContainers extends ArrayList<ClassContainer> {
         return result;
     }
 
-    public Collection build(AbstractParser parser, JavaClassBuilder javaClassBuilder) {
+    public Collection build(AbstractParser parser) {
 
         Collection classes = new ArrayList();
 
