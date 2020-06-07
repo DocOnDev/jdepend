@@ -31,4 +31,5 @@ abstract class ClassContainer {
 
     protected abstract Collection<File> collectFiles(Boolean acceptInnerClasses);
 
+    public abstract Collection<JavaClass> buildClasses(Boolean acceptInnerClasses, AbstractParser parser);
 }

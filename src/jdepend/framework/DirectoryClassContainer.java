@@ -19,7 +19,6 @@ public class DirectoryClassContainer extends ClassContainer {
     @Override
     protected Collection collectFiles(Boolean acceptInnerClass) {
         File directory = getFile();
-
         Collection<File> files = new ArrayList<>();
 
         for (String fileName : directory.list()) {
@@ -34,5 +33,10 @@ public class DirectoryClassContainer extends ClassContainer {
             }
         }
         return files.stream().distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<JavaClass> buildClasses(Boolean acceptInnerClasses, AbstractParser parser) {
+        return new ArrayList<>();
     }
 }
