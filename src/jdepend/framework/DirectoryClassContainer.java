@@ -12,7 +12,9 @@ public class DirectoryClassContainer extends ClassContainer {
     }
 
     @Override
-    protected boolean isNotAContainer() { return !getFile().isDirectory(); }
+    protected boolean isNotAContainer() {
+        return !getFile().isDirectory();
+    }
 
     @Override
     protected Collection collectFiles(Boolean acceptInnerClass) {

@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ClassContainersTest extends JDependTestCase {
 
     private ClassContainers classContainers;
-    
+
     public ClassContainersTest(String name) {
         super(name);
     }
@@ -48,7 +48,7 @@ public class ClassContainersTest extends JDependTestCase {
     }
 
     public void testIsValidContainer_JarFile_True() {
-        assertTrue(classContainers.isValidContainer(new File(getTestDataDir()+ "test.jar")));
+        assertTrue(classContainers.isValidContainer(new File(getTestDataDir() + "test.jar")));
     }
 
     public void testIsValidContainer_ZipFile_True() {

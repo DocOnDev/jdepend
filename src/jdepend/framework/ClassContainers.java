@@ -10,9 +10,9 @@ class ClassContainers extends ArrayList<ClassContainer> {
 
     /**
      * Determines whether inner classes should be collected.
-     *  @param b <code>true</code> to collect inner classes;
-     *          <code>false</code> otherwise.
      *
+     * @param b <code>true</code> to collect inner classes;
+     *          <code>false</code> otherwise.
      */
     public void acceptInnerClasses(boolean b) {
         acceptInnerClasses = b;
@@ -56,5 +56,9 @@ class ClassContainers extends ArrayList<ClassContainer> {
 
     public boolean isValidContainer(File file) {
         return isJar(file) || isZip(file) || isWar(file);
+    }
+
+    boolean isAcceptableClassFile(File file) {
+        return file.isFile() && acceptClassFileName(file.getName());
     }
 }

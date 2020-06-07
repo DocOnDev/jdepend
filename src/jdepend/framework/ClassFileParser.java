@@ -1,13 +1,13 @@
 package jdepend.framework;
 
 import java.io.*;
-import java.util.*;
+import java.util.Iterator;
 
 /**
- * The <code>ClassFileParser</code> class is responsible for 
- * parsing a Java class file to create a <code>JavaClass</code> 
+ * The <code>ClassFileParser</code> class is responsible for
+ * parsing a Java class file to create a <code>JavaClass</code>
  * instance.
- * 
+ *
  * @author <b>Mike Clark</b>
  * @author Clarkware Consulting, Inc.
  */
@@ -34,11 +34,11 @@ public class ClassFileParser extends AbstractParser {
     public static final char CLASS_DESCRIPTOR = 'L';
     public static final int ACC_INTERFACE = 0x200;
     public static final int ACC_ABSTRACT = 0x400;
-    
+
     private String fileName;
     private String className;
     private String superClassName;
-    private String interfaceNames[];
+    private String[] interfaceNames;
     private boolean isAbstract;
     private JavaClass jClass;
     private Constant[] constantPool;
@@ -47,7 +47,7 @@ public class ClassFileParser extends AbstractParser {
     private AttributeInfo[] attributes;
     private DataInputStream in;
 
-    
+
     public ClassFileParser() {
         this(new PackageFilter());
     }
@@ -55,6 +55,30 @@ public class ClassFileParser extends AbstractParser {
     public ClassFileParser(PackageFilter filter) {
         super(filter);
         reset();
+    }
+
+    /**
+     * Test main.
+     */
+    public static void main(String[] args) {
+        try {
+
+            ClassFileParser.DEBUG = true;
+
+            if (args.length <= 0) {
+                System.err.println("usage: ClassFileParser <class-file>");
+                System.exit(0);
+            }
+
+            ClassFileParser parser = new ClassFileParser();
+
+            parser.parse(new File(args[0]));
+
+            System.err.println(parser.toString());
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     private void reset() {
@@ -76,7 +100,7 @@ public class ClassFileParser extends AbstractParser {
      */
     public JavaClass parse(File classFile) throws IOException {
 
-        this.fileName = classFile.getCanonicalPath();
+        this.fileName = classFile.getPath();
 
         debug("\nParsing " + fileName + "...");
 
@@ -197,7 +221,7 @@ public class ClassFileParser extends AbstractParser {
 
         debug("Parser: class name = " + className);
         debug("Parser: package name = " + getPackageName(className));
-        
+
         return className;
     }
 
@@ -207,7 +231,7 @@ public class ClassFileParser extends AbstractParser {
         addImport(getPackageName(superClassName));
 
         debug("Parser: super class name = " + superClassName);
-        
+
         return superClassName;
     }
 
@@ -269,39 +293,39 @@ public class ClassFileParser extends AbstractParser {
 
         switch (tag) {
 
-        case (ClassFileParser.CONSTANT_CLASS):
-        case (ClassFileParser.CONSTANT_STRING):
-        case (ClassFileParser.CONSTANT_METHOD_TYPE):
-            result = new Constant(tag, in.readUnsignedShort());
-            break;
-        case (ClassFileParser.CONSTANT_FIELD):
-        case (ClassFileParser.CONSTANT_METHOD):
-        case (ClassFileParser.CONSTANT_INTERFACEMETHOD):
-        case (ClassFileParser.CONSTANT_NAMEANDTYPE):
-        case (ClassFileParser.CONSTANT_INVOKEDYNAMIC):
-            result = new Constant(tag, in.readUnsignedShort(), in
-                    .readUnsignedShort());
-            break;
-        case (ClassFileParser.CONSTANT_INTEGER):
-            result = new Constant(tag, new Integer(in.readInt()));
-            break;
-        case (ClassFileParser.CONSTANT_FLOAT):
-            result = new Constant(tag, new Float(in.readFloat()));
-            break;
-        case (ClassFileParser.CONSTANT_LONG):
-            result = new Constant(tag, new Long(in.readLong()));
-            break;
-        case (ClassFileParser.CONSTANT_DOUBLE):
-            result = new Constant(tag, new Double(in.readDouble()));
-            break;
-        case (ClassFileParser.CONSTANT_UTF8):
-            result = new Constant(tag, in.readUTF());
-            break;
-        case (ClassFileParser.CONSTANT_METHOD_HANDLE):
-            result = new Constant(tag, in.readByte(), in.readUnsignedShort());
-            break;
-        default:
-            throw new IOException("Unknown constant: " + tag);
+            case (ClassFileParser.CONSTANT_CLASS):
+            case (ClassFileParser.CONSTANT_STRING):
+            case (ClassFileParser.CONSTANT_METHOD_TYPE):
+                result = new Constant(tag, in.readUnsignedShort());
+                break;
+            case (ClassFileParser.CONSTANT_FIELD):
+            case (ClassFileParser.CONSTANT_METHOD):
+            case (ClassFileParser.CONSTANT_INTERFACEMETHOD):
+            case (ClassFileParser.CONSTANT_NAMEANDTYPE):
+            case (ClassFileParser.CONSTANT_INVOKEDYNAMIC):
+                result = new Constant(tag, in.readUnsignedShort(), in
+                        .readUnsignedShort());
+                break;
+            case (ClassFileParser.CONSTANT_INTEGER):
+                result = new Constant(tag, new Integer(in.readInt()));
+                break;
+            case (ClassFileParser.CONSTANT_FLOAT):
+                result = new Constant(tag, new Float(in.readFloat()));
+                break;
+            case (ClassFileParser.CONSTANT_LONG):
+                result = new Constant(tag, new Long(in.readLong()));
+                break;
+            case (ClassFileParser.CONSTANT_DOUBLE):
+                result = new Constant(tag, new Double(in.readDouble()));
+                break;
+            case (ClassFileParser.CONSTANT_UTF8):
+                result = new Constant(tag, in.readUTF());
+                break;
+            case (ClassFileParser.CONSTANT_METHOD_HANDLE):
+                result = new Constant(tag, in.readByte(), in.readUnsignedShort());
+                break;
+            default:
+                throw new IOException("Unknown constant: " + tag);
         }
 
         return result;
@@ -311,14 +335,14 @@ public class ClassFileParser extends AbstractParser {
 
         FieldOrMethodInfo result = new FieldOrMethodInfo(
                 in.readUnsignedShort(), in.readUnsignedShort(), in
-                        .readUnsignedShort());
+                .readUnsignedShort());
 
         int attributesCount = in.readUnsignedShort();
         for (int a = 0; a < attributesCount; a++) {
-        	AttributeInfo attribute = parseAttribute();
-        	if ("RuntimeVisibleAnnotations".equals(attribute.name)) {
-        		result._runtimeVisibleAnnotations = attribute;
-        	}
+            AttributeInfo attribute = parseAttribute();
+            if ("RuntimeVisibleAnnotations".equals(attribute.name)) {
+                result._runtimeVisibleAnnotations = attribute;
+            }
         }
 
         return result;
@@ -381,7 +405,7 @@ public class ClassFileParser extends AbstractParser {
 
                 debug("Parser: class type = " + slashesToDots(name));
             }
-            
+
             if (constantPool[j].getTag() == CONSTANT_DOUBLE
                     || constantPool[j].getTag() == CONSTANT_LONG) {
                 j++;
@@ -396,90 +420,90 @@ public class ClassFileParser extends AbstractParser {
             }
         }
         for (int j = 1; j < fields.length; j++) {
-        	if (fields[j]._runtimeVisibleAnnotations != null) {
-        		addAnnotationReferences(fields[j]._runtimeVisibleAnnotations);
-        	}
+            if (fields[j]._runtimeVisibleAnnotations != null) {
+                addAnnotationReferences(fields[j]._runtimeVisibleAnnotations);
+            }
         }
         for (int j = 1; j < methods.length; j++) {
-        	if (methods[j]._runtimeVisibleAnnotations != null) {
-        		addAnnotationReferences(methods[j]._runtimeVisibleAnnotations);
-        	}
+            if (methods[j]._runtimeVisibleAnnotations != null) {
+                addAnnotationReferences(methods[j]._runtimeVisibleAnnotations);
+            }
         }
     }
 
     private void addAnnotationReferences(AttributeInfo annotation) throws IOException {
-    	// JVM Spec 4.8.15
-    	byte[] data = annotation.value;
-    	int numAnnotations = u2(data, 0);
-    	int annotationIndex = 2;
-    	addAnnotationReferences(data, annotationIndex, numAnnotations);
+        // JVM Spec 4.8.15
+        byte[] data = annotation.value;
+        int numAnnotations = u2(data, 0);
+        int annotationIndex = 2;
+        addAnnotationReferences(data, annotationIndex, numAnnotations);
     }
 
     private int addAnnotationReferences(byte[] data, int index, int numAnnotations) throws IOException {
-    	int visitedAnnotations = 0;
-		while (visitedAnnotations < numAnnotations) {
-	    	int typeIndex = u2(data, index);
-	    	int numElementValuePairs = u2(data, index = index + 2);
-	        addImport(getPackageName(toUTF8(typeIndex).substring(1)));
-	        int visitedElementValuePairs = 0;
-	        index += 2;
-	        while (visitedElementValuePairs < numElementValuePairs) {
-	        	index = addAnnotationElementValueReferences(data, index = index + 2);
-	        	visitedElementValuePairs++;
-	        }
-	        visitedAnnotations++;
-    	}
-		return index;
-	}
-    
-    private int addAnnotationElementValueReferences(byte[] data, int index) throws IOException {
-    	byte tag = data[index];
-    	index += 1;
-    	switch (tag) {
-        	case 'B':
-        	case 'C':
-        	case 'D':
-        	case 'F':
-        	case 'I':
-        	case 'J':
-        	case 'S':
-    		case 'Z':
-    		case 's':
-    			index += 2;
-    			break;
-    			
-    		case 'e':
-    			int enumTypeIndex = u2(data, index);
-    			addImport(getPackageName(toUTF8(enumTypeIndex).substring(1)));
-    			index += 4;
-    			break;
-    			
-    		case 'c':
-    			int classInfoIndex = u2(data, index);
-    			addImport(getPackageName(toUTF8(classInfoIndex).substring(1)));
-    			index += 2;
-    			break;
-    			
-    		case '@':
-    			index = addAnnotationReferences(data, index, 1);
-    			break;
-    			
-    		case '[':
-    			int numValues = u2(data, index);
-    			index = index + 2;
-    			for (int i = 0; i < numValues; i++) {
-    				index = addAnnotationElementValueReferences(data, index);
-    			}
-    			break;
-    	}
-    	return index;
+        int visitedAnnotations = 0;
+        while (visitedAnnotations < numAnnotations) {
+            int typeIndex = u2(data, index);
+            int numElementValuePairs = u2(data, index = index + 2);
+            addImport(getPackageName(toUTF8(typeIndex).substring(1)));
+            int visitedElementValuePairs = 0;
+            index += 2;
+            while (visitedElementValuePairs < numElementValuePairs) {
+                index = addAnnotationElementValueReferences(data, index = index + 2);
+                visitedElementValuePairs++;
+            }
+            visitedAnnotations++;
+        }
+        return index;
     }
 
-	private int u2(byte[] data, int index) {
-		return (data[index] << 8 & 0xFF00)  | (data[index+1] & 0xFF);
-	}
+    private int addAnnotationElementValueReferences(byte[] data, int index) throws IOException {
+        byte tag = data[index];
+        index += 1;
+        switch (tag) {
+            case 'B':
+            case 'C':
+            case 'D':
+            case 'F':
+            case 'I':
+            case 'J':
+            case 'S':
+            case 'Z':
+            case 's':
+                index += 2;
+                break;
 
-	private String getClassConstantName(int entryIndex) throws IOException {
+            case 'e':
+                int enumTypeIndex = u2(data, index);
+                addImport(getPackageName(toUTF8(enumTypeIndex).substring(1)));
+                index += 4;
+                break;
+
+            case 'c':
+                int classInfoIndex = u2(data, index);
+                addImport(getPackageName(toUTF8(classInfoIndex).substring(1)));
+                index += 2;
+                break;
+
+            case '@':
+                index = addAnnotationReferences(data, index, 1);
+                break;
+
+            case '[':
+                int numValues = u2(data, index);
+                index = index + 2;
+                for (int i = 0; i < numValues; i++) {
+                    index = addAnnotationElementValueReferences(data, index);
+                }
+                break;
+        }
+        return index;
+    }
+
+    private int u2(byte[] data, int index) {
+        return (data[index] << 8 & 0xFF00) | (data[index + 1] & 0xFF);
+    }
+
+    private String getClassConstantName(int entryIndex) throws IOException {
 
         Constant entry = getConstantPoolEntry(entryIndex);
         if (entry == null) {
@@ -510,7 +534,7 @@ public class ClassFileParser extends AbstractParser {
 
     private String getPackageName(String s) {
         if ((s.length() > 0) && (s.charAt(0) == '[')) {
-            String types[] = descriptorToTypes(s);
+            String[] types = descriptorToTypes(s);
             if (types.length == 0) {
                 return null; // primitives
             }
@@ -536,7 +560,7 @@ public class ClassFileParser extends AbstractParser {
             }
         }
 
-        String types[] = new String[typesCount];
+        String[] types = new String[typesCount];
 
         int typeIndex = 0;
         for (int index = 0; index < descriptor.length(); index++) {
@@ -553,149 +577,9 @@ public class ClassFileParser extends AbstractParser {
         return types;
     }
 
-    class Constant {
-
-        private byte _tag;
-
-        private int _nameIndex;
-
-        private int _typeIndex;
-
-        private Object _value;
-
-        Constant(byte tag, int nameIndex) {
-            this(tag, nameIndex, -1);
-        }
-
-        Constant(byte tag, Object value) {
-            this(tag, -1, -1);
-            _value = value;
-        }
-
-        Constant(byte tag, int nameIndex, int typeIndex) {
-            _tag = tag;
-            _nameIndex = nameIndex;
-            _typeIndex = typeIndex;
-            _value = null;
-        }
-
-        byte getTag() {
-            return _tag;
-        }
-
-        int getNameIndex() {
-            return _nameIndex;
-        }
-
-        int getTypeIndex() {
-            return _typeIndex;
-        }
-
-        Object getValue() {
-            return _value;
-        }
-
-        public String toString() {
-
-            StringBuffer s = new StringBuffer("");
-
-            s.append("tag: " + getTag());
-
-            if (getNameIndex() > -1) {
-                s.append(" nameIndex: " + getNameIndex());
-            }
-
-            if (getTypeIndex() > -1) {
-                s.append(" typeIndex: " + getTypeIndex());
-            }
-
-            if (getValue() != null) {
-                s.append(" value: " + getValue());
-            }
-
-            return s.toString();
-        }
-    }
-
-    class FieldOrMethodInfo {
-
-        private int _accessFlags;
-
-        private int _nameIndex;
-
-        private int _descriptorIndex;
-        
-        private AttributeInfo _runtimeVisibleAnnotations;
-
-        FieldOrMethodInfo(int accessFlags, int nameIndex, int descriptorIndex) {
-
-            _accessFlags = accessFlags;
-            _nameIndex = nameIndex;
-            _descriptorIndex = descriptorIndex;
-        }
-
-        int accessFlags() {
-            return _accessFlags;
-        }
-
-        int getNameIndex() {
-            return _nameIndex;
-        }
-
-        int getDescriptorIndex() {
-            return _descriptorIndex;
-        }
-
-        public String toString() {
-            StringBuffer s = new StringBuffer("");
-
-            try {
-
-                s.append("\n    name (#" + getNameIndex() + ") = "
-                        + toUTF8(getNameIndex()));
-
-                s.append("\n    signature (#" + getDescriptorIndex() + ") = "
-                        + toUTF8(getDescriptorIndex()));
-
-                String[] types = descriptorToTypes(toUTF8(getDescriptorIndex()));
-                for (int t = 0; t < types.length; t++) {
-                    s.append("\n        type = " + types[t]);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return s.toString();
-        }
-    }
-
-    class AttributeInfo {
-
-        private String name;
-
-        private byte[] value;
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public void setValue(byte[] value) {
-            this.value = value;
-        }
-
-        public byte[] getValue() {
-            return this.value;
-        }
-    }
-
     /**
      * Returns a string representation of this object.
-     * 
+     *
      * @return String representation.
      */
     public String toString() {
@@ -748,27 +632,143 @@ public class ClassFileParser extends AbstractParser {
         return s.toString();
     }
 
-    /**
-     * Test main.
-     */
-    public static void main(String args[]) {
-        try {
+    class Constant {
 
-            ClassFileParser.DEBUG = true;
+        private final byte _tag;
 
-            if (args.length <= 0) {
-                System.err.println("usage: ClassFileParser <class-file>");
-                System.exit(0);
+        private final int _nameIndex;
+
+        private final int _typeIndex;
+
+        private Object _value;
+
+        Constant(byte tag, int nameIndex) {
+            this(tag, nameIndex, -1);
+        }
+
+        Constant(byte tag, Object value) {
+            this(tag, -1, -1);
+            _value = value;
+        }
+
+        Constant(byte tag, int nameIndex, int typeIndex) {
+            _tag = tag;
+            _nameIndex = nameIndex;
+            _typeIndex = typeIndex;
+            _value = null;
+        }
+
+        byte getTag() {
+            return _tag;
+        }
+
+        int getNameIndex() {
+            return _nameIndex;
+        }
+
+        int getTypeIndex() {
+            return _typeIndex;
+        }
+
+        Object getValue() {
+            return _value;
+        }
+
+        public String toString() {
+
+            StringBuffer s = new StringBuffer();
+
+            s.append("tag: " + getTag());
+
+            if (getNameIndex() > -1) {
+                s.append(" nameIndex: " + getNameIndex());
             }
 
-            ClassFileParser parser = new ClassFileParser();
+            if (getTypeIndex() > -1) {
+                s.append(" typeIndex: " + getTypeIndex());
+            }
 
-            parser.parse(new File(args[0]));
+            if (getValue() != null) {
+                s.append(" value: " + getValue());
+            }
 
-            System.err.println(parser.toString());
+            return s.toString();
+        }
+    }
 
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+    class FieldOrMethodInfo {
+
+        private final int _accessFlags;
+
+        private final int _nameIndex;
+
+        private final int _descriptorIndex;
+
+        private AttributeInfo _runtimeVisibleAnnotations;
+
+        FieldOrMethodInfo(int accessFlags, int nameIndex, int descriptorIndex) {
+
+            _accessFlags = accessFlags;
+            _nameIndex = nameIndex;
+            _descriptorIndex = descriptorIndex;
+        }
+
+        int accessFlags() {
+            return _accessFlags;
+        }
+
+        int getNameIndex() {
+            return _nameIndex;
+        }
+
+        int getDescriptorIndex() {
+            return _descriptorIndex;
+        }
+
+        public String toString() {
+            StringBuffer s = new StringBuffer();
+
+            try {
+
+                s.append("\n    name (#" + getNameIndex() + ") = "
+                        + toUTF8(getNameIndex()));
+
+                s.append("\n    signature (#" + getDescriptorIndex() + ") = "
+                        + toUTF8(getDescriptorIndex()));
+
+                String[] types = descriptorToTypes(toUTF8(getDescriptorIndex()));
+                for (int t = 0; t < types.length; t++) {
+                    s.append("\n        type = " + types[t]);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return s.toString();
+        }
+    }
+
+    class AttributeInfo {
+
+        private String name;
+
+        private byte[] value;
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public byte[] getValue() {
+            return this.value;
+        }
+
+        public void setValue(byte[] value) {
+            this.value = value;
         }
     }
 }
