@@ -87,4 +87,22 @@ class ClassContainers extends ArrayList<ClassContainer> {
                 .filter(entry -> acceptClassFileName(entry.getName()))
                 .collect(Collectors.toList());
     }
+
+    public Collection buildClasses(AbstractParser parser, File file, JavaClassBuilder javaClassBuilder) throws IOException {
+        if (!isAcceptableClassFile(file) && !isValidContainer(file)) {
+            throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
+        }
+
+        Collection result = new ArrayList();
+        if (isAcceptableClassFile(file)) {
+            result.addAll(parseFromSource(parser, new StreamSource(file)));
+        } else if (isValidContainer(file)) {
+            JarFile jarFile = new JarFile(file);
+            for (ZipEntry entry : getJarFileEntries(jarFile)) {
+                result.addAll(parseFromSource(parser, new StreamSource(jarFile, entry)));
+            }
+            jarFile.close();
+        }
+        return result;
+    }
 }

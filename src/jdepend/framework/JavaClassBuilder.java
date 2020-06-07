@@ -3,8 +3,6 @@ package jdepend.framework;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 /**
  * The <code>JavaClassBuilder</code> builds <code>JavaClass</code>
@@ -73,25 +71,7 @@ public class JavaClassBuilder {
      * @return Collection of <code>JavaClass</code> instances.
      */
     public Collection buildClasses(File file) throws IOException {
-        return buildClasses(parser, file);
-    }
-
-    public Collection buildClasses(AbstractParser parser, File file) throws IOException {
-        if (!classContainers.isAcceptableClassFile(file) && !classContainers.isValidContainer(file)) {
-            throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
-        }
-
-        Collection result = new ArrayList();
-        if (classContainers.isAcceptableClassFile(file)) {
-            result.addAll(classContainers.parseFromSource(parser, new StreamSource(file)));
-        } else if (classContainers.isValidContainer(file)) {
-            JarFile jarFile = new JarFile(file);
-            for (ZipEntry entry : classContainers.getJarFileEntries(jarFile)) {
-                result.addAll(classContainers.parseFromSource(parser, new StreamSource(jarFile, entry)));
-            }
-            jarFile.close();
-        }
-        return result;
+        return classContainers.buildClasses(parser, file, this);
     }
 
 }
