@@ -82,18 +82,18 @@ public class JavaClassBuilder {
 
         Collection result = new ArrayList();
         if (classContainers.isAcceptableClassFile(file)) {
-            result.addAll(parseFromSource(new StreamSource(file)));
+            result.addAll(parseFromSource(parser, new StreamSource(file)));
         } else if (classContainers.isValidContainer(file)) {
             JarFile jarFile = new JarFile(file);
             for (ZipEntry entry : getJarFileEntries(jarFile)) {
-                result.addAll(parseFromSource(new StreamSource(jarFile, entry)));
+                result.addAll(parseFromSource(parser, new StreamSource(jarFile, entry)));
             }
             jarFile.close();
         }
         return result;
     }
 
-    private Collection parseFromSource(StreamSource streamSource) throws IOException {
+    private Collection parseFromSource(AbstractParser parser, StreamSource streamSource) throws IOException {
         InputStream is = null;
         Collection parsedResult = new ArrayList();
         try {
