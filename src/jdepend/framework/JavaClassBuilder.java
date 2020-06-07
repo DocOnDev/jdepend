@@ -83,7 +83,7 @@ public class JavaClassBuilder {
             result.addAll(classContainers.parseFromSource(parser, new StreamSource(file)));
         } else if (classContainers.isValidContainer(file)) {
             JarFile jarFile = new JarFile(file);
-            for (ZipEntry entry : classContainers.getJarFileEntries(jarFile, this)) {
+            for (ZipEntry entry : classContainers.getJarFileEntries(jarFile)) {
                 result.addAll(classContainers.parseFromSource(parser, new StreamSource(jarFile, entry)));
             }
             jarFile.close();

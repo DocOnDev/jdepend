@@ -82,7 +82,7 @@ class ClassContainers extends ArrayList<ClassContainer> {
         return parsedResult;
     }
 
-    List<ZipEntry> getJarFileEntries(JarFile jarFile, JavaClassBuilder javaClassBuilder) {
+    List<ZipEntry> getJarFileEntries(JarFile jarFile) {
         return jarFile.stream()
                 .filter(entry -> acceptClassFileName(entry.getName()))
                 .collect(Collectors.toList());
