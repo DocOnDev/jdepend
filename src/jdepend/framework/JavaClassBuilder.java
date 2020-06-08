@@ -30,16 +30,10 @@ public class JavaClassBuilder {
     }
 
     public int countClasses() {
-        AbstractParser counter = new AbstractParser() {
-
-            public JavaClass parse(InputStream is) {
-                return new JavaClass("");
-            }
+        AbstractParser countParser = new AbstractParser() {
+            public JavaClass parse(InputStream is) { return new JavaClass(""); }
         };
-
-        JavaClassBuilder builder = new JavaClassBuilder(counter, classContainers);
-        Collection classes = builder.build();
-        return classes.size();
+        return classContainers.build(countParser).size();
     }
 
     /**
