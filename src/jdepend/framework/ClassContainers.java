@@ -13,6 +13,15 @@ import java.util.zip.ZipEntry;
 
 class ClassContainers extends ArrayList<ClassContainer> {
     private boolean acceptInnerClasses = true;
+    private AbstractParser parser;
+
+    ClassContainers(AbstractParser parser) {
+        this.parser = parser;
+    }
+
+    ClassContainers() {
+        this.parser = new ClassFileParser();
+    }
 
     /**
      * Determines whether inner classes should be collected.
@@ -32,12 +41,12 @@ class ClassContainers extends ArrayList<ClassContainer> {
         return ClassContainer.acceptClassFileName(name, acceptInnerClasses());
     }
 
-    public Collection<JavaClass> build(AbstractParser parser) {
+    public Collection<JavaClass> build() {
         Collection<JavaClass> javaClasses = new ArrayList();
 
         for (ClassContainer container : this ) {
             try {
-                javaClasses.addAll(container.buildClasses(acceptInnerClasses, parser));
+                javaClasses.addAll(container.buildClasses(acceptInnerClasses, this.parser));
             } catch (IOException e) {
                 System.err.println("\n" + e.getMessage());
             }
@@ -63,11 +72,11 @@ class ClassContainers extends ArrayList<ClassContainer> {
 
         Collection result = new ArrayList();
         if (isAcceptableClassFile(file)) {
-            result.addAll(parseFromSource(parser, new StreamSource(file)));
+            result.addAll(parseFromSource(this.parser, new StreamSource(file)));
         } else if (isValidContainer(file)) {
             JarFile jarFile = new JarFile(file);
             for (ZipEntry entry : getJarFileEntries(jarFile)) {
-                result.addAll(parseFromSource(parser, new StreamSource(jarFile, entry)));
+                result.addAll(parseFromSource(this.parser, new StreamSource(jarFile, entry)));
             }
             jarFile.close();
         }
@@ -104,7 +113,7 @@ class ClassContainers extends ArrayList<ClassContainer> {
         Collection<JavaClass> parsedResult = new ArrayList();
         try {
             is = streamSource.invoke();
-            parsedResult.add(parser.parse(is));
+            parsedResult.add(this.parser.parse(is));
         } finally {
             if (is != null) {
                 is.close();

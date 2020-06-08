@@ -106,7 +106,6 @@ public class JDepend {
     private final ClassContainers classContainers;
     private PackageFilter filter;
     private final ClassFileParser parser;
-    private final JavaClassBuilder builder;
     private Collection components;
 
     public JDepend() {
@@ -118,10 +117,9 @@ public class JDepend {
         setFilter(filter);
 
         this.packages = new HashMap();
-        this.classContainers = new ClassContainers();
 
         this.parser = new ClassFileParser(filter);
-        this.builder = new JavaClassBuilder(parser, classContainers);
+        this.classContainers = new ClassContainers(parser);
 
         PropertyConfigurator config = new PropertyConfigurator();
         addPackages(config.getConfiguredPackages());
@@ -136,7 +134,7 @@ public class JDepend {
      */
     public Collection analyze() {
 
-        Collection classes = builder.build();
+        Collection classes = classContainers.build();
 
         for (Iterator i = classes.iterator(); i.hasNext(); ) {
             analyzeClass((JavaClass) i.next());
@@ -214,7 +212,7 @@ public class JDepend {
      * @return Number of classes.
      */
     public int countClasses() {
-        return builder.countClasses();
+        return classContainers.build().size();
     }
 
     /**
