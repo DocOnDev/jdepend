@@ -20,10 +20,6 @@ public class JavaClassBuilder {
         this(new ClassFileParser(), new ClassContainers());
     }
 
-    public JavaClassBuilder(ClassContainers containers) {
-        this(new ClassFileParser(), containers);
-    }
-
     public JavaClassBuilder(AbstractParser parser, ClassContainers containers) {
         this.parser = parser;
         this.classContainers = containers;

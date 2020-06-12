@@ -2,6 +2,7 @@ package jdepend.framework;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * @author <b>Mike Clark</b>
@@ -96,6 +97,42 @@ public class ClassContainersTest extends JDependTestCase {
         } catch (IOException e) {
             assertEquals("error in opening zip file", e.getMessage());
         }
+    }
+
+    public void testZipFileWithoutInnerClasses() throws IOException {
+
+        File zipFile = new File(getTestDataDir() + "test.zip");
+
+        ClassContainers containers = new ClassContainers();
+        containers.acceptInnerClasses(false);
+
+        Collection classes = containers.buildClasses(zipFile);
+        assertEquals(4, classes.size());
+
+        assertClassesExist(classes);
+    }
+
+    public void testJarFileWithoutInnerClasses() throws IOException {
+
+        File jarFile = new File(getTestDataDir() + "test.jar");
+
+        ClassContainers containers = new ClassContainers();
+        containers.acceptInnerClasses(false);
+
+        Collection classes = containers.buildClasses(jarFile);
+        assertEquals(4, classes.size());
+
+        assertClassesExist(classes);
+    }
+
+
+    private void assertClassesExist(Collection classes) {
+        assertTrue(classes.contains(new JavaClass(
+                "jdepend.framework.ExampleAbstractClass")));
+        assertTrue(classes.contains(new JavaClass(
+                "jdepend.framework.ExampleInterface")));
+        assertTrue(classes.contains(new JavaClass(
+                "jdepend.framework.ExampleConcreteClass")));
     }
 
 
