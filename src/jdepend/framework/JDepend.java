@@ -134,12 +134,9 @@ public class JDepend {
      */
     public Collection analyze() {
 
-        Collection classes = classContainers.build();
-
-        for (Iterator i = classes.iterator(); i.hasNext(); ) {
-            analyzeClass((JavaClass) i.next());
+        for( JavaClass javaClass : classContainers.build()) {
+            analyzeClass(javaClass);
         }
-
         return getPackages();
     }
 
