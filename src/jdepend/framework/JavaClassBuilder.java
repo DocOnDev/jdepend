@@ -34,15 +34,6 @@ public class JavaClassBuilder {
     }
 
     /**
-     * Builds the <code>JavaClass</code> instances.
-     *
-     * @return Collection of <code>JavaClass</code> instances.
-     */
-    public Collection build() {
-        return classContainers.build();
-    }
-
-    /**
      * Builds the <code>JavaClass</code> instances from the
      * specified file.
      *
