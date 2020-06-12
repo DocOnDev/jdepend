@@ -127,4 +127,8 @@ class ClassContainers extends ArrayList<ClassContainer> {
                 .filter(entry -> acceptClassFileName(entry.getName()))
                 .collect(Collectors.toList());
     }
+
+    public void add(String name) throws IOException {
+        this.add(ClassContainerFactory.getContainer(name));
+    }
 }
