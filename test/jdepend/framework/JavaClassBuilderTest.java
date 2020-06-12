@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class JavaClassBuilderTest extends JDependTestCase{
 
-    private final JavaClassBuilder builder = new JavaClassBuilder();
+    private final ClassContainers classContainers = new ClassContainers();
 
     public JavaClassBuilderTest(String name) { super(name); }
 
@@ -18,7 +18,7 @@ public class JavaClassBuilderTest extends JDependTestCase{
         String missingFilePath = getTestDataDir() + "non-existent.file";
 
         try {
-            builder.buildClasses(new File(missingFilePath));
+            classContainers.buildClasses(new File(missingFilePath));
             fail("Should raise IOException");
         } catch (IOException e) {
             assertEquals("File is not a valid .class, .jar, .war, or .zip file: " + missingFilePath, e.getMessage());
@@ -26,10 +26,8 @@ public class JavaClassBuilderTest extends JDependTestCase{
     }
 
     public void testThrowsExceptionWhenFileNotValid() {
-        JavaClassBuilder builder = new JavaClassBuilder();
-
         try {
-            builder.buildClasses(new File(getTestDataDir() + "bad.jar"));
+            classContainers.buildClasses(new File(getTestDataDir() + "bad.jar"));
             fail("Should raise IOException");
         } catch (IOException e) {
             assertEquals("error in opening zip file", e.getMessage());
