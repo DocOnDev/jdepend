@@ -1,6 +1,5 @@
 package jdepend.framework;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -8,9 +7,9 @@ import java.io.IOException;
  * @author Clarkware Consulting, Inc.
  */
 
-public class JarFileParserTest extends JDependTestCase {
+public class JDependTest extends JDependTestCase {
 
-    public JarFileParserTest(String name) {
+    public JDependTest(String name) {
         super(name);
     }
 
