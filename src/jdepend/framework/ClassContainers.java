@@ -65,7 +65,7 @@ class ClassContainers extends ArrayList<ClassContainer> {
         return files;
     }
 
-    public Collection buildClasses(AbstractParser parser, File file) throws IOException {
+    public Collection buildClasses(File file) throws IOException {
         if (!isAcceptableClassFile(file) && !isValidContainer(file)) {
             throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
         }
