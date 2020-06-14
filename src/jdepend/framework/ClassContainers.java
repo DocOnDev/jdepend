@@ -1,6 +1,8 @@
 package jdepend.framework;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
@@ -60,5 +62,19 @@ class ClassContainers extends ArrayList<ClassContainer> {
 
     boolean isAcceptableClassFile(File file) {
         return file.isFile() && acceptClassFileName(file.getName());
+    }
+
+    Collection parseFromSource(AbstractParser parser, StreamSource streamSource) throws IOException {
+        InputStream is = null;
+        Collection parsedResult = new ArrayList();
+        try {
+            is = streamSource.invoke();
+            parsedResult.add(parser.parse(is));
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return parsedResult;
     }
 }
