@@ -1,11 +1,11 @@
 package jdepend.framework;
 
+import junit.framework.TestCase;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-
-import junit.framework.TestCase;
 
 /**
  * The <code>ExampleTest</code> is an example <code>TestCase</code> 
@@ -46,7 +46,7 @@ public class ExampleTest extends TestCase {
         jdepend = new JDepend(filter);
 
         String classesDir = 
-            jdependHomeDirectory + File.separator + "build";
+            jdependHomeDirectory + File.separator + "test_build";
 
         jdepend.addDirectory(classesDir);
     }
