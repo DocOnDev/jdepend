@@ -1,9 +1,9 @@
 package jdepend.framework;
 
-import java.io.*;
-
-import junit.framework.*;
+import junit.framework.TestCase;
 import org.junit.Ignore;
+
+import java.io.File;
 
 /**
  * @author <b>Mike Clark</b>
@@ -35,7 +35,7 @@ public class JDependTestCase extends TestCase {
         homeDir = "./";
         testDir = homeDir + "test" + File.separator;
         testDataDir = testDir + "data" + File.separator;
-        buildDir = homeDir + "build" + File.separator;
+        buildDir = homeDir + "test_build" + File.separator;
         packageSubDir = "jdepend" + File.separator + 
                         "framework" + File.separator;
         originalUserHome = System.getProperty("user.home");

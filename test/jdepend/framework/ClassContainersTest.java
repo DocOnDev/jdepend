@@ -32,7 +32,7 @@ public class ClassContainersTest extends JDependTestCase {
 
     public void testAddDirectory_BuildDirectory_44Files() throws IOException {
         classContainers.add(ClassContainerFactory.getContainer(getBuildDir()));
-        assertEquals(44, classContainers.extractFiles().size());
+        assertEquals(49, classContainers.extractFiles().size());
     }
 
     public void testAddDirectory_NonExistentDirectory_IOError() {
