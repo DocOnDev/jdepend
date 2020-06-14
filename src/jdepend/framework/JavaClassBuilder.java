@@ -73,18 +73,21 @@ public class JavaClassBuilder {
      * @return Collection of <code>JavaClass</code> instances.
      */
     public Collection buildClasses(File file) throws IOException {
+       return buildClasses(this.parser, file);
+    }
 
+    private Collection buildClasses(AbstractParser parser, File file) throws IOException {
         if (!classContainers.isAcceptableClassFile(file) && !classContainers.isValidContainer(file)) {
             throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
         }
 
         Collection result = new ArrayList();
         if (classContainers.isAcceptableClassFile(file)) {
-            result.addAll(classContainers.parseFromSource(this.parser, new StreamSource(file)));
+            result.addAll(classContainers.parseFromSource(parser, new StreamSource(file)));
         } else if (classContainers.isValidContainer(file)) {
             JarFile jarFile = new JarFile(file);
             for (ZipEntry entry : classContainers.getJarFileEntries(jarFile)) {
-                result.addAll(classContainers.parseFromSource(this.parser, new StreamSource(jarFile, entry)));
+                result.addAll(classContainers.parseFromSource(parser, new StreamSource(jarFile, entry)));
             }
             jarFile.close();
         }
