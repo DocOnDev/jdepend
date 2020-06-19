@@ -54,7 +54,7 @@ public class JavaClassBuilder {
 
         for (File file : classContainers.extractFiles()) {
             try {
-                classes.addAll(buildClasses(file));
+                classes.addAll(classContainers.buildClasses(this.parser, file));
             } catch (IOException ioe) {
                 System.err.println("\n" + ioe.getMessage());
             }
