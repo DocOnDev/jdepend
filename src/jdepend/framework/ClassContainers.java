@@ -32,15 +32,44 @@ class ClassContainers extends ArrayList<ClassContainer> {
         return ClassContainer.acceptClassFileName(name, acceptInnerClasses());
     }
 
+    public Collection build(AbstractParser parser) {
+        Collection classes = new ArrayList();
+
+        for (File file : extractFiles()) {
+            try {
+                classes.addAll(buildClasses(parser, file));
+            } catch (IOException ioe) {
+                System.err.println("\n" + ioe.getMessage());
+            }
+        }
+
+        return classes;
+    }
+
     Collection<File> extractFiles() {
-
         Collection files = new TreeSet();
-
         for (ClassContainer container : this) {
             files.addAll(container.collectFiles(acceptInnerClasses()));
         }
-
         return files;
+    }
+
+    Collection buildClasses(AbstractParser parser, File file) throws IOException {
+        if (!isAcceptableClassFile(file) && !isValidContainer(file)) {
+            throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
+        }
+
+        Collection result = new ArrayList();
+        if (isAcceptableClassFile(file)) {
+            result.addAll(parseFromSource(parser, new StreamSource(file)));
+        } else if (isValidContainer(file)) {
+            JarFile jarFile = new JarFile(file);
+            for (ZipEntry entry : getJarFileEntries(jarFile)) {
+                result.addAll(parseFromSource(parser, new StreamSource(jarFile, entry)));
+            }
+            jarFile.close();
+        }
+        return result;
     }
 
     boolean existsWithExtension(File file, String extension) {
@@ -86,37 +115,5 @@ class ClassContainers extends ArrayList<ClassContainer> {
         return jarFile.stream()
                 .filter(entry -> acceptClassFileName(entry.getName()))
                 .collect(Collectors.toList());
-    }
-
-    Collection buildClasses(AbstractParser parser, File file) throws IOException {
-        if (!isAcceptableClassFile(file) && !isValidContainer(file)) {
-            throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
-        }
-
-        Collection result = new ArrayList();
-        if (isAcceptableClassFile(file)) {
-            result.addAll(parseFromSource(parser, new StreamSource(file)));
-        } else if (isValidContainer(file)) {
-            JarFile jarFile = new JarFile(file);
-            for (ZipEntry entry : getJarFileEntries(jarFile)) {
-                result.addAll(parseFromSource(parser, new StreamSource(jarFile, entry)));
-            }
-            jarFile.close();
-        }
-        return result;
-    }
-
-    public Collection build(AbstractParser parser) {
-        Collection classes = new ArrayList();
-
-        for (File file : extractFiles()) {
-            try {
-                classes.addAll(buildClasses(parser, file));
-            } catch (IOException ioe) {
-                System.err.println("\n" + ioe.getMessage());
-            }
-        }
-
-        return classes;
     }
 }
