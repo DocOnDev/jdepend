@@ -21,6 +21,11 @@ public class ArchiveClassContainer extends ClassContainer {
         return new ArrayList(Arrays.asList(getFile()));
     }
 
+    @Override
+    public Collection<JavaClass> buildClasses(boolean acceptInnerClasses, AbstractParser parser) {
+        return new ArrayList<>();
+    }
+
     private boolean isContainerFile() {
         return hasExtension("war") || hasExtension("jar") || hasExtension("zip");
     }

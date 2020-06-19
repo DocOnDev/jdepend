@@ -33,6 +33,12 @@ class ClassContainers extends ArrayList<ClassContainer> {
     }
 
     public Collection build(AbstractParser parser) {
+
+        Collection javaClasses = new ArrayList();
+        for (ClassContainer container : this) {
+            javaClasses.addAll(container.buildClasses(acceptInnerClasses, parser));
+        }
+
         Collection classes = new ArrayList();
 
         for (File file : extractFiles()) {
