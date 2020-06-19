@@ -1,7 +1,6 @@
 package jdepend.framework;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -49,18 +48,7 @@ public class JavaClassBuilder {
      * @return Collection of <code>JavaClass</code> instances.
      */
     public Collection build() {
-
-        Collection classes = new ArrayList();
-
-        for (File file : classContainers.extractFiles()) {
-            try {
-                classes.addAll(classContainers.buildClasses(this.parser, file));
-            } catch (IOException ioe) {
-                System.err.println("\n" + ioe.getMessage());
-            }
-        }
-
-        return classes;
+        return classContainers.build(this.parser);
     }
 
     /**
