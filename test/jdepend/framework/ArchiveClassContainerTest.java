@@ -24,10 +24,28 @@ public class ArchiveClassContainerTest extends JDependTestCase {
         assertNotNull(new ArchiveClassContainer(getTestDataDir()+"test.zip"));
     }
 
-    public void testBuildClasses_JarWith5Classes_5Classes() throws IOException {
+    public void testBuildClasses_JarWithInnerClasses_5Classes() throws IOException {
         ClassContainer archiveContainer = new ArchiveClassContainer(getTestDataDir()+"test.jar");
         Collection classes = archiveContainer.buildClasses(true, new ClassFileParser());
         assertEquals(5, classes.size());
+    }
+
+    public void testBuildClasses_ZipWithInnerClasses_HasInnerClass() throws IOException {
+        ClassContainer archiveContainer = new ArchiveClassContainer(getTestDataDir()+"test.zip");
+        Collection classes = archiveContainer.buildClasses(true, new ClassFileParser());
+        assertTrue(classes.contains(new JavaClass("jdepend.framework.ExampleConcreteClass$ExampleInnerClass")));
+    }
+
+    public void testBuildClasses_ZipWithoutInnerClasses_4Classes() throws IOException {
+        ClassContainer archiveContainer = new ArchiveClassContainer(getTestDataDir()+"test.zip");
+        Collection classes = archiveContainer.buildClasses(false, new ClassFileParser());
+        assertEquals(4, classes.size());
+    }
+
+    public void testBuildClasses_JarWithoutInnerClasses_NoInnerClass() throws IOException {
+        ClassContainer archiveContainer = new ArchiveClassContainer(getTestDataDir()+"test.jar");
+        Collection classes = archiveContainer.buildClasses(false, new ClassFileParser());
+        assertFalse(classes.contains(new JavaClass("jdepend.framework.ExampleConcreteClass$ExampleInnerClass")));
     }
 
 
