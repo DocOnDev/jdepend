@@ -36,7 +36,11 @@ class ClassContainers extends ArrayList<ClassContainer> {
 
         Collection javaClasses = new ArrayList();
         for (ClassContainer container : this) {
-            javaClasses.addAll(container.buildClasses(acceptInnerClasses, parser));
+            try {
+                javaClasses.addAll(container.buildClasses(acceptInnerClasses, parser));
+            } catch (IOException e) {
+                System.err.println("\n" + e.getMessage());
+            }
         }
 
         Collection classes = new ArrayList();

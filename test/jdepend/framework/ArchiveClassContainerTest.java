@@ -1,6 +1,7 @@
 package jdepend.framework;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class ArchiveClassContainerTest extends JDependTestCase {
     public ArchiveClassContainerTest(String name) {
@@ -22,6 +23,13 @@ public class ArchiveClassContainerTest extends JDependTestCase {
     public void testConstructor_ZipFile_Exists() throws IOException {
         assertNotNull(new ArchiveClassContainer(getTestDataDir()+"test.zip"));
     }
+
+    public void testBuildClasses_JarWith5Classes_5Classes() throws IOException {
+        ClassContainer archiveContainer = new ArchiveClassContainer(getTestDataDir()+"test.jar");
+        Collection classes = archiveContainer.buildClasses(true, new ClassFileParser());
+        assertEquals(5, classes.size());
+    }
+
 
     private void confirmIOExeption(String source) {
         try {
