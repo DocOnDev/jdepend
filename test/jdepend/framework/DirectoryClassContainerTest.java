@@ -1,6 +1,7 @@
 package jdepend.framework;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class DirectoryClassContainerTest extends JDependTestCase {
     public DirectoryClassContainerTest(String name) {
@@ -17,6 +18,12 @@ public class DirectoryClassContainerTest extends JDependTestCase {
 
     public void testConstructor_InvalidDirectory_IOException() {
         confirmIOExeption(getBuildDir() + "bogus");
+    }
+
+    public void testBuildClasses_SimpleDirectory_OneClass() throws IOException {
+        ClassContainer container = new DirectoryClassContainer(getBuildDir()+"jdepend/framework/p1/");
+        Collection classes = container.buildClasses(true, new ClassFileParser());
+        assertEquals(1, classes.size());
     }
 
     private void confirmIOExeption(String source) {
