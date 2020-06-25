@@ -17,7 +17,7 @@ public class DirectoryClassContainer extends ClassContainer {
     }
 
     @Override
-    protected Collection collectFiles(Boolean acceptInnerClass) {
+    protected Collection<File> collectFiles(Boolean acceptInnerClass) {
         File directory = getFile();
 
         Collection<File> files = new ArrayList<>();
@@ -37,7 +37,11 @@ public class DirectoryClassContainer extends ClassContainer {
     }
 
     @Override
-    public Collection<JavaClass> buildClasses(boolean acceptInnerClasses, AbstractParser parser) {
-        return new ArrayList<>();
+    public Collection<JavaClass> buildClasses(boolean acceptInnerClasses, AbstractParser parser) throws IOException {
+        Collection<JavaClass> result = new ArrayList<>();
+        for ( File file : collectFiles(acceptInnerClasses)) {
+            result.addAll(parseFromSource(parser, new StreamSource(file)));
+        }
+        return result;
     }
 }
