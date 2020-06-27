@@ -18,26 +18,20 @@ public class JDependTestCase extends TestCase {
     private String buildDir;
     private String packageSubDir;
     private String originalUserHome;
+    private String jDependDir;
 
-    
+
     public JDependTestCase(String name) {
         super(name);
     }
 
     protected void setUp() {
-
-//        homeDir = System.getProperty("jdepend.home");
-//        if (homeDir == null) {
-//            fail("Property 'jdepend.home' not defined");
-//        }
-//        homeDir = homeDir + File.separator;
-        // Let's not worry about a property for now.
         homeDir = "./";
         testDir = homeDir + "test" + File.separator;
         testDataDir = testDir + "data" + File.separator;
         buildDir = homeDir + "test_build" + File.separator;
-        packageSubDir = "jdepend" + File.separator + 
-                        "framework" + File.separator;
+        jDependDir = "jdepend" + File.separator;
+        packageSubDir = jDependDir + "framework" + File.separator;
         originalUserHome = System.getProperty("user.home");
     }
 
@@ -48,6 +42,8 @@ public class JDependTestCase extends TestCase {
     public String getHomeDir() {
         return homeDir;
     }
+
+    public String getJDependDir() { return jDependDir; }
 
     public String getTestDataDir() {
         return testDataDir;

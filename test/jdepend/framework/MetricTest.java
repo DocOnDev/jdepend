@@ -38,7 +38,7 @@ public class MetricTest extends JDependTestCase {
     }
 
     public void testAnalyzeClassFiles() throws IOException {
-        jdepend.addDirectory(getBuildDir());
+        jdepend.addDirectory(getBuildDir()+getJDependDir());
         assertAnalyzePackages();
     }
 
@@ -119,7 +119,7 @@ public class MetricTest extends JDependTestCase {
 
     public void testConfiguredVolatility() throws IOException {
 
-        jdepend.addDirectory(getBuildDir());
+        jdepend.addDirectory(getBuildDir()+getJDependDir());
 
         JavaPackage pkg = new JavaPackage("jdepend.swingui");
         pkg.setVolatility(0);

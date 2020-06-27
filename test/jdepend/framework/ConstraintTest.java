@@ -69,7 +69,7 @@ public class ConstraintTest extends JDependTestCase {
 
     public void testJDependConstraints() throws IOException {
         
-        jdepend.addDirectory(getBuildDir());
+        jdepend.addDirectory(getBuildDir()+getJDependDir());
 
         jdepend.analyze();
 

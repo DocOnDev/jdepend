@@ -46,7 +46,7 @@ public class ExampleTest extends TestCase {
         jdepend = new JDepend(filter);
 
         String classesDir = 
-            jdependHomeDirectory + File.separator + "test_build";
+            jdependHomeDirectory + File.separator + "test_build" + File.separator + "jdepend";
 
         jdepend.addDirectory(classesDir);
     }

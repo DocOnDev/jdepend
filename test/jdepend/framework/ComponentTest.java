@@ -37,7 +37,7 @@ public class ComponentTest extends JDependTestCase {
 
         jdepend.setComponents("jdepend,junit,java,javax");
         
-        jdepend.addDirectory(getBuildDir());
+        jdepend.addDirectory(getBuildDir()+getJDependDir());
         
         jdepend.analyze();
         

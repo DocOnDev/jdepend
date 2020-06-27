@@ -31,7 +31,7 @@ public class ClassContainersTest extends JDependTestCase {
     }
 
     public void testAddDirectory_BuildDirectory_44Files() throws IOException {
-        classContainers.add(ClassContainerFactory.getContainer(getBuildDir()));
+        classContainers.add(ClassContainerFactory.getContainer(getBuildDir()+getJDependDir()));
         assertEquals(49, classContainers.extractFiles().size());
     }
 
