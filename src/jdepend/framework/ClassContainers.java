@@ -2,14 +2,9 @@ package jdepend.framework;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.TreeSet;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
 
 class ClassContainers extends ArrayList<ClassContainer> {
     private boolean acceptInnerClasses = true;
@@ -54,24 +49,6 @@ class ClassContainers extends ArrayList<ClassContainer> {
         return files;
     }
 
-    Collection buildClasses(AbstractParser parser, File file) throws IOException {
-        if (!isAcceptableClassFile(file) && !isValidContainer(file)) {
-            throw new IOException("File is not a valid .class, .jar, .war, or .zip file: " + file.getPath());
-        }
-
-        Collection result = new ArrayList();
-        if (isAcceptableClassFile(file)) {
-            result.addAll(parseFromSource(parser, new StreamSource(file)));
-        } else if (isValidContainer(file)) {
-            JarFile jarFile = new JarFile(file);
-            for (ZipEntry entry : getJarFileEntries(jarFile)) {
-                result.addAll(parseFromSource(parser, new StreamSource(jarFile, entry)));
-            }
-            jarFile.close();
-        }
-        return result;
-    }
-
     boolean existsWithExtension(File file, String extension) {
         return file.isFile() &&
                 file.getName().toLowerCase().endsWith(extension);
@@ -93,27 +70,4 @@ class ClassContainers extends ArrayList<ClassContainer> {
         return isJar(file) || isZip(file) || isWar(file);
     }
 
-    boolean isAcceptableClassFile(File file) {
-        return file.isFile() && acceptClassFileName(file.getName());
-    }
-
-    Collection parseFromSource(AbstractParser parser, StreamSource streamSource) throws IOException {
-        InputStream is = null;
-        Collection parsedResult = new ArrayList();
-        try {
-            is = streamSource.invoke();
-            parsedResult.add(parser.parse(is));
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        return parsedResult;
-    }
-
-    List<ZipEntry> getJarFileEntries(JarFile jarFile) {
-        return jarFile.stream()
-                .filter(entry -> acceptClassFileName(entry.getName()))
-                .collect(Collectors.toList());
-    }
 }

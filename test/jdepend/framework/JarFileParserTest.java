@@ -29,84 +29,6 @@ public class JarFileParserTest extends JDependTestCase {
         super.tearDown();
     }
 
-    public void testInvalidJarFile() throws IOException {
-
-        JavaClassBuilder builder = new JavaClassBuilder();
-        File bogusFile = new File(getTestDataDir() + "bogus.jar");
-
-        try {
-
-            builder.buildClasses(bogusFile);
-            fail("Should raise IOException");
-
-        } catch (IOException expected) {
-            assertTrue(true);
-        }
-    }
-
-    public void testInvalidZipFile() throws IOException {
-
-        JavaClassBuilder builder = new JavaClassBuilder();
-        File bogusFile = new File(getTestDataDir() + "bogus.zip");
-
-        try {
-
-            builder.buildClasses(bogusFile);
-            fail("Should raise IOException");
-
-        } catch (IOException expected) {
-            assertTrue(true);
-        }
-    }
-
-    public void testJarFile() throws IOException {
-
-        JavaClassBuilder builder = new JavaClassBuilder();
-
-        Collection classes = builder.buildClasses(jarFile);
-        assertEquals(5, classes.size());
-
-        assertClassesExist(classes);
-        assertInnerClassesExist(classes);
-    }
-
-    public void testJarFileWithoutInnerClasses() throws IOException {
-
-        ClassContainers containers = new ClassContainers();
-        containers.acceptInnerClasses(false);
-
-        JavaClassBuilder builder = new JavaClassBuilder(containers);
-
-        Collection classes = builder.buildClasses(jarFile);
-        assertEquals(4, classes.size());
-
-        assertClassesExist(classes);
-    }
-
-    public void testZipFile() throws IOException {
-
-        JavaClassBuilder builder = new JavaClassBuilder();
-
-        Collection classes = builder.buildClasses(zipFile);
-        assertEquals(5, classes.size());
-
-        assertClassesExist(classes);
-        assertInnerClassesExist(classes);
-    }
-
-    public void testZipFileWithoutInnerClasses() throws IOException {
-
-        ClassContainers containers = new ClassContainers();
-        containers.acceptInnerClasses(false);
-
-        JavaClassBuilder builder = new JavaClassBuilder(containers);
-
-        Collection classes = builder.buildClasses(zipFile);
-        assertEquals(4, classes.size());
-
-        assertClassesExist(classes);
-    }
-
     public void testCountClasses() throws IOException {
 
         JDepend jdepend = new JDepend();
@@ -117,15 +39,6 @@ public class JarFileParserTest extends JDependTestCase {
 
         jdepend.analyzeInnerClasses(false);
         assertEquals(12, jdepend.countClasses());
-    }
-
-    private void assertClassesExist(Collection classes) {
-        assertTrue(classes.contains(new JavaClass(
-                "jdepend.framework.ExampleAbstractClass")));
-        assertTrue(classes.contains(new JavaClass(
-                "jdepend.framework.ExampleInterface")));
-        assertTrue(classes.contains(new JavaClass(
-                "jdepend.framework.ExampleConcreteClass")));
     }
 
     private void assertInnerClassesExist(Collection classes) {
