@@ -17,14 +17,6 @@ class ClassContainers extends ArrayList<ClassContainer> {
         acceptInnerClasses = b;
     }
 
-    public boolean acceptInnerClasses() {
-        return this.acceptInnerClasses;
-    }
-
-    public boolean acceptClassFileName(String name) {
-        return ClassContainer.acceptClassFileName(name, acceptInnerClasses());
-    }
-
     public Collection<JavaClass> build(AbstractParser parser) {
 
         Collection<JavaClass> javaClasses = new ArrayList();

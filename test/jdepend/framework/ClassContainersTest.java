@@ -1,6 +1,5 @@
 package jdepend.framework;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -36,16 +35,6 @@ public class ClassContainersTest extends JDependTestCase {
         String file = getTestDir() + getPackageSubDir() + "ExampleTest.java";
         String errorReason = "Invalid directory:";
         assertIOError(file, errorReason);
-    }
-
-    public void testAcceptClassFile_ValidClassFile_True() throws IOException {
-        File file = new File(getBuildDir() + getPackageSubDir() + "JDepend.class");
-        assertTrue(classContainers.acceptClassFileName(file.getName()));
-    }
-
-    public void testAcceptClassFile_InvalidClassFile_False() {
-        File file = new File(getHomeDir() + "build.xml");
-        assertFalse(classContainers.acceptClassFileName(file.getName()));
     }
 
     private void assertIOError(String fileName, String errorReason) {
