@@ -26,15 +26,6 @@ public class ClassContainersTest extends JDependTestCase {
         super.tearDown();
     }
 
-    public void testExtractFiles_EmptyFileManager_ZeroSize() {
-        assertEquals(0, classContainers.extractFiles().size());
-    }
-
-    public void testAddDirectory_BuildDirectory_44Files() throws IOException {
-        classContainers.add(ClassContainerFactory.getContainer(getBuildDir()+getJDependDir()));
-        assertEquals(49, classContainers.extractFiles().size());
-    }
-
     public void testAddDirectory_NonExistentDirectory_IOError() {
         String file = getBuildDir() + "junk";
         String errorReason = "Non-existent directory:";

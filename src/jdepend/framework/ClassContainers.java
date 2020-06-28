@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.TreeSet;
 
 class ClassContainers extends ArrayList<ClassContainer> {
     private boolean acceptInnerClasses = true;
@@ -39,14 +38,6 @@ class ClassContainers extends ArrayList<ClassContainer> {
         }
 
         return javaClasses;
-    }
-
-    Collection<File> extractFiles() {
-        Collection files = new TreeSet();
-        for (ClassContainer container : this) {
-            files.addAll(container.collectFiles(acceptInnerClasses()));
-        }
-        return files;
     }
 
     boolean existsWithExtension(File file, String extension) {
