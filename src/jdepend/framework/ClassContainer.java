@@ -31,8 +31,6 @@ abstract class ClassContainer {
         return location;
     }
 
-    protected abstract Collection<File> collectFiles(Boolean acceptInnerClasses);
-
     public abstract Collection<JavaClass> buildClasses(boolean acceptInnerClasses, AbstractParser parser) throws IOException;
 
     Collection parseFromSource(AbstractParser parser, StreamSource streamSource) throws IOException {

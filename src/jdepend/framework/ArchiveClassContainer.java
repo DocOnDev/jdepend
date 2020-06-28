@@ -1,9 +1,7 @@
 package jdepend.framework;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -21,20 +19,13 @@ public class ArchiveClassContainer extends ClassContainer {
     }
 
     @Override
-    protected Collection<File> collectFiles(Boolean acceptInnerClasses) {
-        return new ArrayList(Arrays.asList(getFile()));
-    }
-
-    @Override
     public Collection<JavaClass> buildClasses(boolean acceptInnerClasses, AbstractParser parser) throws IOException {
         Collection<JavaClass> classes = new ArrayList<>();
-        for( File file : collectFiles(acceptInnerClasses)) {
-            JarFile jarFile = new JarFile(file);
-            for (ZipEntry entry : getJarFileEntries(jarFile, acceptInnerClasses)) {
-                classes.addAll(parseFromSource(parser, new StreamSource(jarFile, entry)));
-            }
-            jarFile.close();
+        JarFile jarFile = new JarFile(getFile());
+        for (ZipEntry entry : getJarFileEntries(jarFile, acceptInnerClasses)) {
+            classes.addAll(parseFromSource(parser, new StreamSource(jarFile, entry)));
         }
+        jarFile.close();
         return classes;
     }
 
