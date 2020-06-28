@@ -133,13 +133,9 @@ public class JDepend {
      * @return Collection of analyzed packages.
      */
     public Collection analyze() {
-
-        Collection classes = classContainers.build(parser);
-
-        for (Iterator i = classes.iterator(); i.hasNext(); ) {
-            analyzeClass((JavaClass) i.next());
+        for (JavaClass javaClass : classContainers.build(parser)) {
+            analyzeClass(javaClass);
         }
-
         return getPackages();
     }
 
