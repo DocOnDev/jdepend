@@ -156,12 +156,7 @@ public class JDepend {
      * @param components Comma-separated list of components.
      */
     public void setComponents(String components) {
-        this.components = new ArrayList();
-        StringTokenizer st = new StringTokenizer(components, ",");
-        while (st.hasMoreTokens()) {
-            String component = st.nextToken();
-            this.components.add(component);
-        }
+        this.components = Arrays.asList(components.split(",", -1));
     }
 
     /**
