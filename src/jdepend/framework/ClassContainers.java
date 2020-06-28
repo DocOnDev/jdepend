@@ -25,9 +25,9 @@ class ClassContainers extends ArrayList<ClassContainer> {
         return ClassContainer.acceptClassFileName(name, acceptInnerClasses());
     }
 
-    public Collection build(AbstractParser parser) {
+    public Collection<JavaClass> build(AbstractParser parser) {
 
-        Collection javaClasses = new ArrayList();
+        Collection<JavaClass> javaClasses = new ArrayList();
         for (ClassContainer container : this) {
             try {
                 javaClasses.addAll(container.buildClasses(acceptInnerClasses, parser));
