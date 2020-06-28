@@ -29,16 +29,6 @@ public class JavaClassBuilder {
         this.classContainers = containers;
     }
 
-    public int countClasses() {
-        AbstractParser countParser = new AbstractParser() {
-
-            public JavaClass parse(InputStream is) {
-                return new JavaClass("");
-            }
-        };
-        return classContainers.build(countParser).size();
-    }
-
     /**
      * Builds the <code>JavaClass</code> instances.
      *

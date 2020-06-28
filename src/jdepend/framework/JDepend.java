@@ -1,6 +1,7 @@
 package jdepend.framework;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -106,7 +107,6 @@ public class JDepend {
     private final ClassContainers classContainers;
     private PackageFilter filter;
     private final ClassFileParser parser;
-    private final JavaClassBuilder builder;
     private Collection components;
 
     public JDepend() {
@@ -119,9 +119,7 @@ public class JDepend {
 
         this.packages = new HashMap();
         this.classContainers = new ClassContainers();
-
         this.parser = new ClassFileParser(filter);
-        this.builder = new JavaClassBuilder(parser, classContainers);
 
         PropertyConfigurator config = new PropertyConfigurator();
         addPackages(config.getConfiguredPackages());
@@ -136,7 +134,7 @@ public class JDepend {
      */
     public Collection analyze() {
 
-        Collection classes = builder.build();
+        Collection classes = classContainers.build(parser);
 
         for (Iterator i = classes.iterator(); i.hasNext(); ) {
             analyzeClass((JavaClass) i.next());
@@ -214,7 +212,13 @@ public class JDepend {
      * @return Number of classes.
      */
     public int countClasses() {
-        return builder.countClasses();
+        AbstractParser countParser = new AbstractParser() {
+
+            public JavaClass parse(InputStream is) {
+                return new JavaClass("");
+            }
+        };
+        return classContainers.build(countParser).size();
     }
 
     /**
