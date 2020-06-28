@@ -26,6 +26,18 @@ public class DirectoryClassContainerTest extends JDependTestCase {
         assertEquals(1, classes.size());
     }
 
+    public void testBuildClasses_FrameworkDir_39Classes() throws IOException {
+        ClassContainer container = new DirectoryClassContainer(getBuildDir()+getPackageSubDir());
+        Collection classes = container.buildClasses(false, new ClassFileParser());
+        assertEquals(39, classes.size());
+    }
+
+    public void testBuildClasses_TestBuild_61Classes() throws IOException {
+        ClassContainer container = new DirectoryClassContainer(getBuildDir());
+        Collection classes = container.buildClasses(false, new ClassFileParser());
+        assertEquals(61, classes.size());
+    }
+
     private void confirmIOExeption(String source) {
         try {
             new DirectoryClassContainer(source);

@@ -38,10 +38,21 @@ public class DirectoryClassContainer extends ClassContainer {
 
     @Override
     public Collection<JavaClass> buildClasses(boolean acceptInnerClasses, AbstractParser parser) throws IOException {
-        Collection<JavaClass> result = new ArrayList<>();
-        for ( File file : collectFiles(acceptInnerClasses)) {
-            result.addAll(parseFromSource(parser, new StreamSource(file)));
+        File directory = getFile();
+
+        Collection<JavaClass> classes = new ArrayList<>();
+
+        for (String fileName : directory.list()) {
+            File file = new File(directory, fileName);
+            try {
+                ClassContainer subContainer = ClassContainerFactory.getContainer(file.getPath());
+                classes.addAll(subContainer.buildClasses(acceptInnerClasses, parser));
+            } catch (IOException e) {
+                if (acceptClassFileName(file.getName(), acceptInnerClasses)) {
+                    classes.addAll(parseFromSource(parser, new StreamSource(file)));
+                }
+            }
         }
-        return result;
+        return classes;
     }
 }
