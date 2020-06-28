@@ -43,17 +43,7 @@ class ClassContainers extends ArrayList<ClassContainer> {
             }
         }
 
-        Collection classes = new ArrayList();
-
-        for (File file : extractFiles()) {
-            try {
-                classes.addAll(buildClasses(parser, file));
-            } catch (IOException ioe) {
-                System.err.println("\n" + ioe.getMessage());
-            }
-        }
-
-        return classes;
+        return javaClasses;
     }
 
     Collection<File> extractFiles() {

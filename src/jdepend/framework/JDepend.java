@@ -118,8 +118,8 @@ public class JDepend {
         setFilter(filter);
 
         this.packages = new HashMap();
-        this.classContainers = new ClassContainers();
         this.parser = new ClassFileParser(filter);
+        this.classContainers = new ClassContainers();
 
         PropertyConfigurator config = new PropertyConfigurator();
         addPackages(config.getConfiguredPackages());
