@@ -38,18 +38,6 @@ public class ClassContainersTest extends JDependTestCase {
         assertIOError(file, errorReason);
     }
 
-    public void testIsValidContainer_JarFile_True() {
-        assertTrue(classContainers.isValidContainer(new File(getTestDataDir() + "test.jar")));
-    }
-
-    public void testIsValidContainer_ZipFile_True() {
-        assertTrue(classContainers.isValidContainer(new File(getTestDataDir() + "test.zip")));
-    }
-
-    public void testIsValidContainer_BinFile_False() {
-        assertFalse(classContainers.isValidContainer(new File(getTestDataDir() + "example_class1.bin")));
-    }
-
     public void testAcceptClassFile_ValidClassFile_True() throws IOException {
         File file = new File(getBuildDir() + getPackageSubDir() + "JDepend.class");
         assertTrue(classContainers.acceptClassFileName(file.getName()));
