@@ -16,7 +16,7 @@ public class AllTests {
 
         suite.addTestSuite(ClassFileParserTest.class);
         suite.addTestSuite(ComponentTest.class);
-        suite.addTestSuite(JarFileParserTest.class);
+        suite.addTestSuite(JDependTest.class);
         suite.addTestSuite(ConstraintTest.class);
         suite.addTestSuite(CycleTest.class);
         suite.addTestSuite(CollectAllCyclesTest.class);

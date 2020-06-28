@@ -2,19 +2,18 @@ package jdepend.framework;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * @author <b>Mike Clark</b>
  * @author Clarkware Consulting, Inc.
  */
 
-public class JarFileParserTest extends JDependTestCase {
+public class JDependTest extends JDependTestCase {
 
     private File jarFile;
     private File zipFile;
 
-    public JarFileParserTest(String name) {
+    public JDependTest(String name) {
         super(name);
     }
 
@@ -41,8 +40,4 @@ public class JarFileParserTest extends JDependTestCase {
         assertEquals(12, jdepend.countClasses());
     }
 
-    private void assertInnerClassesExist(Collection classes) {
-        assertTrue(classes.contains(new JavaClass(
-                "jdepend.framework.ExampleConcreteClass$ExampleInnerClass")));
-    }
 }
